@@ -14,6 +14,13 @@ add_action('wp_enqueue_scripts', function()
     wp_enqueue_script( 'script', get_bloginfo('template_directory').'/_build/bundle.js', [], false, true );
 });
 
+/* remove text/javascript for validation */
+add_filter('script_loader_tag', function($tag, $handle)
+{
+    $tag = str_replace('script type=\'text/javascript\'', 'script', $tag);
+    return $tag;
+}, 10, 2);
+
 // disable jquery and other scripts added by plugins
 add_action('wp_enqueue_scripts', function()
 {
@@ -22,8 +29,8 @@ add_action('wp_enqueue_scripts', function()
 add_action('wp_footer', function()
 {
     wp_deregister_script('wp-embed');
-    wp_deregister_script('wpfc-toolbar');
 });
+define('WPFC_HIDE_TOOLBAR', true);
 
 // load css (critical)
 add_action('wp_head', function()
