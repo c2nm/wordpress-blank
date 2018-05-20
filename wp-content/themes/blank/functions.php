@@ -30,7 +30,10 @@ add_action('wp_footer', function()
 {
     wp_deregister_script('wp-embed');
 });
-define('WPFC_HIDE_TOOLBAR', true);
+if( !is_admin() )
+{
+    define('WPFC_HIDE_TOOLBAR', true);
+}
 
 // load css (critical)
 add_action('wp_head', function()
