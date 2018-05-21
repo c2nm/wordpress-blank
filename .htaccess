@@ -1,3 +1,4 @@
+# gzip
 <IfModule mod_deflate.c>
     <FilesMatch "\.(js|jpg|jpeg|gif|png|css|svg)$">
         ExpiresActive on
@@ -16,4 +17,4 @@ AddType video/ogg .ogv
 AddType video/ogg .ogg
 AddType image/svg+xml .svg .svgz
 
-# wordpress stuff ...
+# wordpress ...
