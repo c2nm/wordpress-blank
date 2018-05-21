@@ -41,7 +41,11 @@ add_action('wp_head', function()
     if( file_exists( get_template_directory().'/_build/bundle-critical.css' ) && is_production() )
     {
         echo '<style>';
-            echo file_get_contents(get_template_directory().'/_build/bundle-critical.css');
+            $stylesheet = file_get_contents(get_template_directory().'/_build/bundle-critical.css');
+            // replace relative paths
+            $stylesheet = str_replace('url(\'../_','url(\''.get_bloginfo('template_directory').'/_', $stylesheet);
+            $stylesheet = str_replace('url(../_','url('.get_bloginfo('template_directory').'/_', $stylesheet);
+            echo $stylesheet;
         echo '</style>';
     }
 });
