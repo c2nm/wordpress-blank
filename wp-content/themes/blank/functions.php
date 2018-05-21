@@ -22,11 +22,19 @@ add_action('wp_head', function()
 
             document.addEventListener('DOMContentLoaded', function()
             {
-                var script = document.createElement('script'); script.src = 'https://www.googletagmanager.com/gtag/js?id=<?php echo $property; ?>'; document.head.appendChild(script);
-                window.dataLayer = window.dataLayer || [];
-                function gtag(){dataLayer.push(arguments);}
-                gtag('js', new Date());    
-                gtag('config', '<?php echo $property; ?>', { 'anonymize_ip': true });
+                var script = null;
+
+                script = document.createElement('script');
+                script.src = 'https://www.googletagmanager.com/gtag/js?id=<?php echo $property; ?>';
+                document.head.appendChild(script);
+
+                script = document.createElement('script');
+                script.innerHTML += 'window.dataLayer = window.dataLayer || [];';
+                script.innerHTML += 'var gtag = function() { dataLayer.push(arguments); };';
+                script.innerHTML += 'gtag(\'js\', new Date());';
+                // track page view
+                script.innerHTML += 'gtag(\'config\', \'<?php echo $property; ?>\', { \'anonymize_ip\': true });';
+                document.head.appendChild(script);
             });
         }
     </script><?php
