@@ -1,4 +1,5 @@
 <?php
+echo ascii_art();
 echo '<!DOCTYPE html>';
 echo '<html '; language_attributes(); echo '>';
 echo '<head>';
