@@ -4,7 +4,7 @@ require_once(get_template_directory().'/vendor/autoload.php');
 
 /* show password on testing */
 if(
-    strpos($_SERVER['HTTP_HOST'], 'close2dev') &&
+    strpos($_SERVER['HTTP_HOST'], 'close2dev') !== false &&
     !is_admin() &&
     !isset($_COOKIE['testing']) &&
     $pagenow != 'wp-login.php'
