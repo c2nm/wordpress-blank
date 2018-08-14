@@ -2,7 +2,7 @@
 // add composer
 require_once(get_template_directory().'/vendor/autoload.php');
 
-/* show password on testing */
+// show password on testing
 if(
     strpos($_SERVER['HTTP_HOST'], 'close2dev') !== false &&
     !is_admin() &&
@@ -44,13 +44,16 @@ function is_production()
     return (strpos($_SERVER['HTTP_HOST'], '.local') === false && strpos($_SERVER['HTTP_HOST'], '192.168.178') === false);
 }
 
+// hide toolbar in frontend
+add_filter('show_admin_bar', '__return_false');
+
 // load js
 add_action('wp_enqueue_scripts', function()
 {
     wp_enqueue_script( 'script', get_bloginfo('template_directory').'/_build/bundle.js', [], false, true );
 });
 
-/* remove text/javascript for validation */
+// remove text/javascript for validation
 add_filter('script_loader_tag', function($tag, $handle)
 {
     $tag = str_replace('script type=\'text/javascript\'', 'script', $tag);
@@ -89,7 +92,7 @@ add_action('wp_head', function()
 // load css (non-critical)
 add_action('wp_footer', function()
 {
-    /* https://github.com/filamentgroup/loadCSS */
+    // https://github.com/filamentgroup/loadCSS
     echo '<link rel="preload" href="'.get_bloginfo('template_directory').'/_build/bundle.css'.((!is_production())?('?ver='.mt_rand(1000,9999)):('')).'" as="style" onload="this.onload=null;this.rel=\'stylesheet\'">';
     echo '<noscript><link rel="stylesheet" href="'.get_bloginfo('template_directory').'/_build/bundle.css"></noscript>';
     echo '<script>';
@@ -167,7 +170,7 @@ if( !is_production() )
 	]);
 }
 
-/* remove emojis */
+// remove emojis
 function disable_emojis()
 {
     remove_action( 'wp_head', 'print_emoji_detection_script', 7 );
@@ -180,7 +183,7 @@ function disable_emojis()
 }
 add_action( 'init', 'disable_emojis' );
 
-/* remove wordpress version number */
+// remove wordpress version number
 remove_action('wp_head', 'wp_generator');
 
 // ascii art
