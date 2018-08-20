@@ -1,3 +1,6 @@
+# prevent access to dotfiles like .git
+RedirectMatch 404 /\..*$
+
 # gzip
 <IfModule mod_deflate.c>
     <FilesMatch "\.(js|jpg|jpeg|gif|png|css|svg)$">
