@@ -3,14 +3,22 @@ RedirectMatch 404 /\..*$
 
 # gzip
 <IfModule mod_deflate.c>
-    <FilesMatch "\.(js|jpg|jpeg|gif|png|css|svg)$">
-        <IfModule !mod_win32.c>
-            ExpiresActive on
-            ExpiresDefault "access plus 7 days"
-            SetOutputFilter DEFLATE
-        </IfModule>
+    <FilesMatch "\.(html|js|css|svg)$">
+        ExpiresActive on
+        ExpiresDefault "access plus 365 days"
+        SetOutputFilter DEFLATE
     </FilesMatch>
 </IfModule>
+
+# no directory browsing
+<IfModule mod_autoindex.c>
+    Options -Indexes
+</IfModule>
+
+# prevent discovery of author-names
+RewriteCond %{REQUEST_URI} !^/wp-admin [NC]
+RewriteCond %{QUERY_STRING} author=\d
+RewriteRule ^ /? [L,R=301]
 
 # mime types
 AddType video/mp4 .mp4 
@@ -22,4 +30,30 @@ AddType video/ogg .ogv
 AddType video/ogg .ogg
 AddType image/svg+xml .svg .svgz
 
-# wordpress ...
+# ssl
+RewriteCond %{HTTP_HOST} !\.local$ [NC]
+RewriteCond %{HTTP_HOST} !\.xip\.io$ [NC]
+RewriteCond %{HTTPS} !=on [NC]
+RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
+# www
+RewriteCond %{HTTP_HOST} !\.local$ [NC]
+RewriteCond %{HTTP_HOST} !\.xip\.io$ [NC]
+RewriteCond %{HTTP_HOST} !\.close2dev\.de$ [NC]
+RewriteCond %{HTTP_HOST} !^www\..+$ [NC]
+RewriteRule ^ https://www.%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
+# non-www
+# RewriteCond %{HTTP_HOST} !\.local$ [NC]
+# RewriteCond %{HTTP_HOST} !\.xip\.io$ [NC]
+# RewriteCond %{HTTP_HOST} ^www\..+$ [NC]
+# RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
+
+# BEGIN WordPress
+<IfModule mod_rewrite.c>
+RewriteEngine On
+RewriteBase /
+RewriteRule ^index\.php$ - [L]
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule . /index.php [L]
+</IfModule>
+# END WordPress
