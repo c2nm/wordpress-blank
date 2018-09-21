@@ -1,7 +1,8 @@
 # prevent access to dotfiles like .git
 RedirectMatch 404 /\..*$
 
-# set php.ini values
+# increase limits via .htaccess (this only works when PHP is not running in CGI mode)
+<IfModule mod_php7.c>
 php_value max_execution_time 2400
 php_value max_input_time 900
 php_value post_max_size 800M
@@ -10,6 +11,7 @@ php_value upload_max_filesize 800M
 php_value max_input_vars 100000
 php_value max_file_uploads 5000
 php_value realpath_cache_size 4M
+</IfModule>
 
 # gzip
 <IfModule mod_deflate.c>
