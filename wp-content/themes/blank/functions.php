@@ -108,7 +108,7 @@ add_theme_support( 'post-thumbnails' );
 // add favicon
 add_action('wp_head', function()
 {
-    echo '<link rel="shortcut icon" href="'.get_bloginfo('template_directory').'/_assets/favicon.png" />';
+    echo '<link rel="icon" type="image/png" sizes="32x32" href="/favicon.png">';
 });
 
 // add menus
