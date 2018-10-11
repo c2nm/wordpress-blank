@@ -64,6 +64,7 @@ add_filter('script_loader_tag', function($tag, $handle)
 add_action('wp_enqueue_scripts', function()
 {
     wp_deregister_script('jquery');
+    wp_deregister_style( 'wp-block-library' ); // gutenberg
 });
 add_action('wp_footer', function()
 {
