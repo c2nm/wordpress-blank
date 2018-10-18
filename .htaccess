@@ -13,12 +13,16 @@ php_value max_file_uploads 5000
 php_value realpath_cache_size 4M
 </IfModule>
 
-# gzip
+# deflate / gzip
 <IfModule mod_deflate.c>
     <FilesMatch "\.(html|js|css|svg)$">
         ExpiresActive on
         ExpiresDefault "access plus 365 days"
         SetOutputFilter DEFLATE
+    </FilesMatch>
+    <FilesMatch "\.(jpg|jpeg|gif|png|css)$">
+        ExpiresActive on
+        ExpiresDefault "access plus 365 days"
     </FilesMatch>
 </IfModule>
 
