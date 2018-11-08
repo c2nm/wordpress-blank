@@ -143,6 +143,26 @@ function wp_remove_version($src)
 add_filter( 'style_loader_src', 'wp_remove_version', 9999 );
 add_filter( 'script_loader_src', 'wp_remove_version', 9999 );
 
+// disable user-sniffing (source: https://www.wp-tweaks.com/hackers-can-find-your-wordpress-username)
+function redirect_to_home_if_author_parameter() {
+    $is_author_set = get_query_var( 'author', '' );
+    if ( $is_author_set != '' && !is_admin()) {
+        wp_redirect( home_url(), 301 );
+        exit;
+    }
+}
+add_action( 'template_redirect', 'redirect_to_home_if_author_parameter' );
+function disable_rest_endpoints ( $endpoints ) {
+    if ( isset( $endpoints['/wp/v2/users'] ) ) {
+        unset( $endpoints['/wp/v2/users'] );
+    }
+    if ( isset( $endpoints['/wp/v2/users/(?P<id>[\d]+)'] ) ) {
+        unset( $endpoints['/wp/v2/users/(?P<id>[\d]+)'] );
+    }
+    return $endpoints;
+}
+add_filter( 'rest_endpoints', 'disable_rest_endpoints');
+
 // disable category / tag / date / author / archive / attachments
 function disable_uneeded_archives() {
     if( is_category() || is_tag() || is_date() || is_author() || is_attachment() )
