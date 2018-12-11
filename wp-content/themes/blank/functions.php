@@ -12,6 +12,8 @@ if(
     if( isset($_POST['password']) && $_POST['password'] === '42' )
     {
         setcookie('testing', '1', time()+60*60*24*1, '/');
+        header('Location: ' . $_SERVER['REQUEST_URI']);
+        die();
     }
     else
     {
