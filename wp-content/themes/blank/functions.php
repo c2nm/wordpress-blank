@@ -49,11 +49,20 @@ function is_production()
 // hide toolbar in frontend
 add_filter('show_admin_bar', '__return_false');
 
-// load js
+// load js (in header, because we use async)
 add_action('wp_enqueue_scripts', function()
 {
-    wp_enqueue_script( 'script', get_bloginfo('template_directory').'/_build/bundle.js', [], false, true );
+    wp_enqueue_script( 'script', get_bloginfo('template_directory').'/_build/bundle.js', [], false, false );
 });
+
+// add async defer to javascript files
+add_filter( 'script_loader_tag', function ( $tag, $handle ) {    
+    if( is_admin() )
+    {
+        return $tag;
+    }
+    return str_replace( ' src', ' async defer src', $tag );
+}, 10, 2 );
 
 // remove text/javascript for validation
 add_filter('script_loader_tag', function($tag, $handle)
