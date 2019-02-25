@@ -1,4 +1,5 @@
 <?php
 /* Template Name: custom-tpl */
-
-die('OK');
+get_header();
+/* ... */
+get_footer();
