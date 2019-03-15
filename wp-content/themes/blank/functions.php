@@ -55,6 +55,22 @@ add_action('wp_enqueue_scripts', function()
     wp_enqueue_script( 'script', get_bloginfo('template_directory').'/_build/bundle.js', [], false, false );
 });
 
+/* further delay js loading (only use for highly optimized pages) */
+/*
+add_action('wp_footer', function()
+{
+    echo '<script>
+        window.addEventListener(\'load\', function() {
+            setTimeout(() => {
+                var script = document.createElement(\'script\');
+                script.src = \''.get_bloginfo('template_directory').'/_build/bundle.js\';
+                document.head.appendChild(script);
+            },1000);
+        });
+    </script>';
+});
+*/
+
 // add async defer to javascript files
 add_filter( 'script_loader_tag', function ( $tag, $handle ) {    
     if( is_admin() )
