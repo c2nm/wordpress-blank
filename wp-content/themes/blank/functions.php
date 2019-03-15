@@ -61,11 +61,13 @@ add_action('wp_footer', function()
 {
     echo '<script>
         window.addEventListener(\'load\', function() {
+            var delay = 1500;
+            if( window.innerWidth >= 768 ) { delay = 0; }
             setTimeout(function() {
                 var script = document.createElement(\'script\');
                 script.src = \''.get_bloginfo('template_directory').'/_build/bundle.js\';
                 document.head.appendChild(script);
-            },1000);
+            }, delay);
         });
     </script>';
 });
