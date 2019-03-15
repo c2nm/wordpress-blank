@@ -61,7 +61,7 @@ add_action('wp_footer', function()
 {
     echo '<script>
         window.addEventListener(\'load\', function() {
-            setTimeout(() => {
+            setTimeout(function() {
                 var script = document.createElement(\'script\');
                 script.src = \''.get_bloginfo('template_directory').'/_build/bundle.js\';
                 document.head.appendChild(script);
