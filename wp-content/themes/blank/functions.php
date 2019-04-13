@@ -236,6 +236,13 @@ add_action( 'init', 'disable_emojis' );
 // remove wordpress version number
 remove_action('wp_head', 'wp_generator');
 
+// remove text content editors on all pages (to fully use acf fields) #wordpress
+add_action('admin_init', function()
+{
+    remove_post_type_support( 'post', 'editor' );
+    remove_post_type_support( 'page', 'editor' );
+});
+
 // ascii art
 function ascii_art()
 {
