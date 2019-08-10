@@ -56,6 +56,15 @@ add_action('wp_enqueue_scripts', function()
     wp_enqueue_script( 'script', get_bloginfo('template_directory').'/_build/bundle.js', [], false, false );
 });
 
+// basic loading of css/js
+/*
+add_action('wp_enqueue_scripts', function() {
+    wp_enqueue_style('style',get_bloginfo('template_directory').'/style.css');
+    wp_enqueue_script('script1',get_bloginfo('template_directory').'/script.js', ['jquery']);
+    wp_enqueue_script('jquery');
+});
+*/
+
 /* further delay js loading (only use for highly optimized pages) */
 /*
 add_action('wp_footer', function()
