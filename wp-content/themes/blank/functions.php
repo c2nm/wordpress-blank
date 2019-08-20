@@ -219,7 +219,7 @@ add_action('template_redirect', 'disable_uneeded_archives');
 add_action('wp_head', function()
 {
 	echo '<script>var baseurl = \''.get_bloginfo('url').'\', tplurl = \''.get_bloginfo('template_directory').'\';</script>';
-});
+}, -9999);
 
 // disable password protected on localhost
 if( !is_production() )
