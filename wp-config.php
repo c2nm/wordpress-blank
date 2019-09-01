@@ -1,12 +1,12 @@
 <?php
-if( $_SERVER['SERVER_ADMIN'] == 'david@close2.de' )
+if( @$_SERVER['SERVER_ADMIN'] === 'david@close2.de' || @$_SERVER['NAME'] === 'DAVID-DESKTOP' )
 {
     define('DB_NAME', 'xxxxxxxx');
     define('DB_USER', 'xxxxxxxx');
     define('DB_PASSWORD', 'xxxxxxxx');
     define('DB_HOST', 'localhost');
 }
-elseif( strpos($_SERVER['HTTP_HOST'], 'close2dev') !== false )
+elseif( strpos(@$_SERVER['HTTP_HOST'], 'close2dev') !== false )
 {
     define('DB_NAME', 'xxxxxxxx');
     define('DB_USER', 'xxxxxxxx');
@@ -23,7 +23,6 @@ else
 
 define('DB_CHARSET', 'utf8mb4');
 define('DB_COLLATE', '');
-define('WP_DEBUG', false);
 define('DIEONDBERROR', true);
 
 define( 'AUTH_KEY',         '{2[]zN,A!~JhcY4#$(=27i!@Xse{}A>x?8&@D6 ;WL[2Y0I52E9{5uz>;V1d CQN' );
