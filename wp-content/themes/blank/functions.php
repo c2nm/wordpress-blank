@@ -59,8 +59,8 @@ add_action('wp_enqueue_scripts', function()
 // basic loading of css/js
 /*
 add_action('wp_enqueue_scripts', function() {
-    wp_enqueue_style('style',get_bloginfo('template_directory').'/style.css');
-    wp_enqueue_script('script1',get_bloginfo('template_directory').'/script.js', ['jquery']);
+    wp_enqueue_style('style',get_bloginfo('template_directory').'/bundle.css');
+    wp_enqueue_script('script',get_bloginfo('template_directory').'/bundle.js', ['jquery']);
     wp_enqueue_script('jquery');
 });
 */
