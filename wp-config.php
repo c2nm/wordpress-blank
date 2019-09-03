@@ -5,6 +5,10 @@ if( @$_SERVER['SERVER_ADMIN'] === 'david@close2.de' || @$_SERVER['NAME'] === 'DA
     define('DB_USER', 'xxxxxxxx');
     define('DB_PASSWORD', 'xxxxxxxx');
     define('DB_HOST', 'localhost');
+    define('WP_DEBUG', true);
+    define('WP_DEBUG_LOG', false);
+    define('WP_DEBUG_DISPLAY', true);    
+    define('DIEONDBERROR', true);
 }
 elseif( strpos(@$_SERVER['HTTP_HOST'], 'close2dev') !== false )
 {
@@ -12,6 +16,10 @@ elseif( strpos(@$_SERVER['HTTP_HOST'], 'close2dev') !== false )
     define('DB_USER', 'xxxxxxxx');
     define('DB_PASSWORD', 'xxxxxxxx');
     define('DB_HOST', 'localhost');
+    define('WP_DEBUG', false);
+    define('WP_DEBUG_LOG', false);
+    define('WP_DEBUG_DISPLAY', false);
+    define('DIEONDBERROR', false);
 }
 else
 {
@@ -19,11 +27,14 @@ else
     define('DB_USER', 'xxxxxxxx');
     define('DB_PASSWORD', 'xxxxxxxx');
     define('DB_HOST', 'localhost');
+    define('WP_DEBUG', false);
+    define('WP_DEBUG_LOG', false);
+    define('WP_DEBUG_DISPLAY', false);
+    define('DIEONDBERROR', false);
 }
 
 define('DB_CHARSET', 'utf8mb4');
 define('DB_COLLATE', '');
-define('DIEONDBERROR', true);
 
 define( 'AUTH_KEY',         '{2[]zN,A!~JhcY4#$(=27i!@Xse{}A>x?8&@D6 ;WL[2Y0I52E9{5uz>;V1d CQN' );
 define( 'SECURE_AUTH_KEY',  'Jq&[m0kle/zMlTB!9.qB4r;` j_D!)R[lB1S$@V6]7B.55#P%wl{YI.^e={oUO51' );
