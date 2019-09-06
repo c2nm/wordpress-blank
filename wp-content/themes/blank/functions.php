@@ -271,3 +271,6 @@ ___________________\\///_____\\///////////////__
 
 EOD;
 }
+
+// reenable custom meta box in posts removed by acf
+add_filter('acf/settings/remove_wp_meta_box', '__return_false');
