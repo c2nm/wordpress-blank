@@ -253,6 +253,9 @@ add_action('admin_init', function()
     remove_post_type_support( 'page', 'editor' );
 });
 
+// reenable custom meta box in posts removed by acf
+add_filter('acf/settings/remove_wp_meta_box', '__return_false');
+
 // ascii art
 function ascii_art()
 {
@@ -271,6 +274,3 @@ ___________________\\///_____\\///////////////__
 
 EOD;
 }
-
-// reenable custom meta box in posts removed by acf
-add_filter('acf/settings/remove_wp_meta_box', '__return_false');
