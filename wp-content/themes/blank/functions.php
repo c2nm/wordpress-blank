@@ -256,6 +256,23 @@ add_action('admin_init', function()
 // reenable custom meta box in posts removed by acf
 add_filter('acf/settings/remove_wp_meta_box', '__return_false');
 
+// enable svg upload
+add_filter( 'upload_mimes', function($existing_mimes = [])
+{
+    $existing_mimes['vcf'] = 'text/x-vcard';
+    $existing_mimes['svg'] = 'image/svg+xml';
+    return $existing_mimes;
+});
+add_filter( 'wp_check_filetype_and_ext', function($data, $file, $filename, $mimes)
+{
+  $filetype = wp_check_filetype( $filename, $mimes );
+  return [
+      'ext' => $filetype['ext'],
+      'type' => $filetype['type'],
+      'proper_filename' => $data['proper_filename']
+  ];
+}, 10, 4 );
+
 // ascii art
 function ascii_art()
 {
