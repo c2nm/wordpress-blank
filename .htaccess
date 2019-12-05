@@ -1,10 +1,9 @@
 # prevent access to dotfiles like .git
 RedirectMatch 404 /\..*$
 
-# prevent access to composer
+# prevent access to composer files
 RedirectMatch 404 composer.json$
 RedirectMatch 404 composer.lock$
-RedirectMatch 404 /vendor
 
 # increase limits via .htaccess (this only works when PHP is not running in CGI mode)
 <IfModule mod_php7.c>
