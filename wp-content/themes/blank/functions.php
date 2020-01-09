@@ -47,6 +47,12 @@ function is_production()
     return (strpos($_SERVER['HTTP_HOST'], '.local') === false && strpos($_SERVER['HTTP_HOST'], '192.168.178') === false);
 }
 
+/* disable email bug alerts */
+add_filter( 'recovery_mode_email', function( $email, $url ) {
+    $email['to'] = 'unknown@local';
+    return $email;
+}, 10, 2 );
+
 // hide toolbar in frontend
 add_filter('show_admin_bar', '__return_false');
 
