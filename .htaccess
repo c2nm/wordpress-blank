@@ -5,6 +5,20 @@ RedirectMatch 404 /\..*$
 RedirectMatch 404 composer.json$
 RedirectMatch 404 composer.lock$
 
+# password on testing
+SetEnvIf HOST "close2dev\.de" protected
+SetEnvIf Request_URI "wp-json" !protected
+SetEnvIf Cookie "access_token" !protected
+Order Allow,Deny
+AuthType Basic
+AuthName "Interner Bereich"
+AuthUserFile /www/htdocs/xxxxxxxx/xxx.close2dev.de/.htpasswd
+AuthGroupFile /dev/null
+require valid-user
+Allow from all
+Deny from env=protected
+Satisfy any
+
 # increase limits via .htaccess (this only works when PHP is not running in CGI mode)
 <IfModule mod_php7.c>
 php_value max_execution_time 2400
