@@ -240,6 +240,11 @@ add_filter( 'wp_check_filetype_and_ext', function($data, $file, $filename, $mime
   ];
 }, 10, 4 );
 
+// disable in plugin "Enable Media Replace" second option "Datei ersetzen, aber neuen Dateinamen verwenden und alle Links automatisch aktualisieren"
+add_filter('emr_enable_replace_and_search', function() {
+    return false;
+}, 10, 0);
+
 // ascii art
 function ascii_art()
 {
