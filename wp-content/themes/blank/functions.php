@@ -9,7 +9,15 @@ function is_production()
     return (strpos($_SERVER['HTTP_HOST'], '.local') === false && strpos($_SERVER['HTTP_HOST'], '192.168.178') === false);
 }
 
-/* disable email bug alerts */
+// block subscribers from admin
+add_action('init', function () {
+    if (is_admin() && !defined('DOING_AJAX') && current_user_can('subscriber')) {
+        wp_redirect(home_url());
+        die();
+    }
+});
+
+// disable email bug alerts
 add_filter( 'recovery_mode_email', function( $email, $url ) {
     $email['to'] = 'unknown@local';
     return $email;
