@@ -1,6 +1,7 @@
 .env
-/vendor/
-/node_modules/
+vendor/
+composer.lock
+node_modules/
 /wp-content/cache/
 /wp-content/wflogs/
 /logs/

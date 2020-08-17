@@ -1,0 +1,10 @@
+{
+    "require": {
+        "vielhuber/stringhelper": "^3.8"
+    },
+    "autoload": {
+        "psr-4": {
+            "WordPress\\": "php/"
+        }
+    }
+}
