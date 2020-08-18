@@ -191,6 +191,9 @@ function disable_uneeded_archives() {
 }
 add_action('template_redirect', 'disable_uneeded_archives');
 
+// disable media slugs from taking away page slugs
+add_filter( 'wp_unique_post_slug_is_bad_attachment_slug', '__return_true' );
+
 // make urls available in js
 add_action('wp_head', function()
 {
