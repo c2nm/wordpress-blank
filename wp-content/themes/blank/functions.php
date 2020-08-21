@@ -30,6 +30,13 @@ add_filter('show_admin_bar', '__return_false');
 add_action('wp_enqueue_scripts', function()
 {
     wp_enqueue_script( 'script', get_bloginfo('template_directory').'/_build/bundle.js', [], false, false );
+    // make urls available in js (access with window.settings.***)
+    wp_localize_script('script', 'settings', [
+        'baseurl' => get_bloginfo('url'),
+        'tplurl' => get_bloginfo('template_directory'),
+        'resturl' => rest_url(),
+        'nonce' => wp_create_nonce('wp_rest')
+    ]);
 });
 
 // basic loading of css/js
@@ -193,12 +200,6 @@ add_action('template_redirect', 'disable_uneeded_archives');
 
 // disable media slugs from taking away page slugs
 add_filter( 'wp_unique_post_slug_is_bad_attachment_slug', '__return_true' );
-
-// make urls available in js
-add_action('wp_head', function()
-{
-	echo '<script>var baseurl = \''.get_bloginfo('url').'\', tplurl = \''.get_bloginfo('template_directory').'\';</script>';
-}, -9999);
 
 // disable password protected on localhost
 if( !is_production() )
