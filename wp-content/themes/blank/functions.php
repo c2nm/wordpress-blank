@@ -35,6 +35,7 @@ add_action('wp_enqueue_scripts', function()
         'baseurl' => get_bloginfo('url'),
         'tplurl' => get_bloginfo('template_directory'),
         'resturl' => rest_url(),
+        'lng' => defined( 'ICL_LANGUAGE_CODE' ) ? ICL_LANGUAGE_CODE : 'en',
         'nonce' => wp_create_nonce('wp_rest')
     ]);
 });
