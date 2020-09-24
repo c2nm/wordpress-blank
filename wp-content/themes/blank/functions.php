@@ -84,6 +84,7 @@ add_filter('script_loader_tag', function($tag, $handle)
 }, 10, 2);
 
 // disable jquery and other scripts added by plugins
+// if you really need them bundle them locally(!) in your package.json
 add_action('wp_enqueue_scripts', function()
 {
     wp_deregister_script('jquery');
@@ -97,6 +98,19 @@ if( !is_admin() )
 {
     define('WPFC_HIDE_TOOLBAR', true);
 }
+/* this is a more strict variant: deregister all scripts/styles in frontend (disabled) */
+/*
+add_action('wp_enqueue_scripts', function() {
+    global $wp_styles;
+    foreach ($wp_styles->queue as $style_handle) {
+        wp_dequeue_style($style_handle);
+    }
+    global $wp_scripts;
+    foreach ($wp_scripts->queue as $script_handle) {
+        wp_dequeue_script($script_handle);
+    }
+});
+*/
 
 // load css (critical)
 add_action('wp_head', function()
