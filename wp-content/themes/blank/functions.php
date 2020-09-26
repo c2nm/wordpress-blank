@@ -40,6 +40,17 @@ add_action('wp_enqueue_scripts', function()
     ]);
 });
 
+// make strings available in js without specific registered script (access with window.***)
+/*
+add_action('wp_head', function () {
+    echo '<script>
+    var baseurl = \''.get_bloginfo('url').'\';
+    var tplurl = \''.get_bloginfo('template_directory').'\';
+    var resturl = \''.rest_url().'\';
+    </script>';
+});
+*/
+
 // basic loading of css/js
 /*
 add_action('wp_enqueue_scripts', function() {
