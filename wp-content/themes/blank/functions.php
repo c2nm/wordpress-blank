@@ -40,14 +40,18 @@ add_action('wp_enqueue_scripts', function()
     ]);
 });
 
-// make strings available in js without specific registered script (access with window.***)
+// make strings available in js without specific registered script (access with window.settings.***)
 /*
 add_action('wp_head', function () {
-    echo '<script>
-    var baseurl = \''.get_bloginfo('url').'\';
-    var tplurl = \''.get_bloginfo('template_directory').'\';
-    var resturl = \''.rest_url().'\';
-    </script>';
+    ?>
+    <script>
+    var settings = <?php echo json_encode([
+        'baseurl' => gtbabel__(get_bloginfo('url')),
+        'tplurl' => gtbabel__(get_bloginfo('template_directory')),
+        'resturl' => gtbabel__(rest_url())
+    ]); ?>;
+    </script>
+    <?php
 });
 */
 
