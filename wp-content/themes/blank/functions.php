@@ -84,7 +84,7 @@ add_action('wp_footer', function()
 
 // add async defer to javascript files
 add_filter( 'script_loader_tag', function ( $tag, $handle ) {    
-    if( is_admin() )
+    if( is_admin() || $GLOBALS['pagenow'] == 'wp-login.php' )
     {
         return $tag;
     }
