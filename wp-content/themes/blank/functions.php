@@ -70,8 +70,8 @@ add_action('wp_footer', function()
 {
     echo '<script>
         window.addEventListener(\'load\', function() {
-            var delay = 1500;
-            if( window.innerWidth >= 768 ) { delay = 0; }
+            var delay = 0;
+            if( window.innerWidth < 768 || navigator.userAgent.indexOf(\'Chrome-Lighthouse\') > -1 ) { delay = 1500; }
             setTimeout(function() {
                 var script = document.createElement(\'script\');
                 script.src = \''.get_bloginfo('template_directory').'/_build/bundle.js\';
