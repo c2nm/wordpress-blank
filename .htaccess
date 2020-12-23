@@ -71,6 +71,7 @@ AddType video/ogg .ogg
 AddType image/svg+xml .svg .svgz
 
 # ssl
+RewriteEngine On
 RewriteCond %{HTTP_HOST} !\.local$ [NC]
 RewriteCond %{HTTP_HOST} !\.xip\.io$ [NC]
 RewriteCond %{HTTP_HOST} !\.close2dev\.de$ [NC]
@@ -78,6 +79,7 @@ RewriteCond %{HTTP_HOST} !\.vielhuber\.de$ [NC]
 RewriteCond %{HTTPS} !=on [NC]
 RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
 # www
+RewriteEngine On
 RewriteCond %{HTTP_HOST} !\.local$ [NC]
 RewriteCond %{HTTP_HOST} !\.xip\.io$ [NC]
 RewriteCond %{HTTP_HOST} !\.close2dev\.de$ [NC]
