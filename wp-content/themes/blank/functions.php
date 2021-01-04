@@ -215,9 +215,9 @@ function disable_rest_endpoints ( $endpoints ) {
 }
 add_filter( 'rest_endpoints', 'disable_rest_endpoints');
 
-// disable category / tag / date / author / archive / attachments
+// disable category / tag / date / author / archive / attachments / search route
 function disable_uneeded_archives() {
-    if( is_category() || is_tag() || is_date() || is_author() || is_attachment() )
+    if( is_category() || is_tag() || is_date() || is_author() || is_attachment() || is_search() )
     {
 		header('Status: 404 Not Found');
 		global $wp_query;
