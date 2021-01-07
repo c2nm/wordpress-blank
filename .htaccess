@@ -31,7 +31,7 @@ php_value max_file_uploads 5000
 php_value realpath_cache_size 4M
 </IfModule>
 
-# security addition
+# enable hsts (security addition)
 Header set Strict-Transport-Security max-age=31536000
 Header set X-Frame-Options "sameorigin"
 Header set X-Content-Type-Options nosniff
