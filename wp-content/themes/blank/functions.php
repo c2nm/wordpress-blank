@@ -6,7 +6,7 @@ require_once(get_template_directory().'/_php/_load.php');
 // environment
 function is_production()
 {
-    return (strpos($_SERVER['HTTP_HOST'], '.local') === false && strpos($_SERVER['HTTP_HOST'], '192.168.178') === false);
+    return (strpos($_SERVER['HTTP_HOST'], '.local') === false && strpos($_SERVER['HTTP_HOST'], 'close2dev') === false && strpos($_SERVER['HTTP_HOST'], '192.168.178') === false);
 }
 
 // block subscribers from admin
