@@ -132,7 +132,7 @@ if(1==0) {
 /* option 1: fully embed css */
 if(1==1) {
     add_action('wp_head', function () {
-        if (file_exists(get_template_directory() . '/_build/bundle.css') && is_production()) {
+        if (file_exists(get_template_directory() . '/_build/bundle.css')) {
             echo '<style>';
             $stylesheet = file_get_contents(get_template_directory() . '/_build/bundle.css');
             // replace relative paths
