@@ -7,7 +7,10 @@ RedirectMatch 404 composer.lock$
 
 # password on testing
 SetEnvIf HOST "close2dev\.de" protected
-SetEnvIf Request_URI "wp-json" !protected
+#SetEnvIf Request_URI "wp-json" !protected
+<If "%{THE_REQUEST} =~ m#wp-json#">
+SetEnvIf Request_URI ".*" !protected
+</If>
 SetEnvIf Cookie "access_token" !protected
 Order Allow,Deny
 AuthType Basic
