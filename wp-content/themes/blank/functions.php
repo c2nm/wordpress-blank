@@ -122,7 +122,7 @@ if(1==0) {
 // basic loading
 if(1==0) {
     add_action('wp_enqueue_scripts', function() {
-        wp_enqueue_script('script',get_bloginfo('template_directory').'/bundle.js', ['jquery']);
+        wp_enqueue_script('script',get_bloginfo('template_directory').'/_build/bundle.js', ['jquery']);
         wp_enqueue_script('jquery');
     });
 }

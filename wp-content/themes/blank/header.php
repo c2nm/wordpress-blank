@@ -1,7 +1,7 @@
 <?php
 echo ascii_art();
 echo '<!DOCTYPE html>';
-echo '<html '; language_attributes(); echo '>';
+echo '<html '; language_attributes(); echo ' class="font-custom responsive-typography selection-color scrollbar">';
 echo '<head>';
     echo '<meta charset="'.get_bloginfo('charset').'" />';
     echo '<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5, minimum-scale=1" />';
