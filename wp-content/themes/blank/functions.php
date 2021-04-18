@@ -184,6 +184,9 @@ add_theme_support( 'title-tag' );
 add_theme_support( 'automatic-feed-links' );
 add_theme_support( 'post-thumbnails' );
 
+// enable custom editor style
+add_editor_style();
+
 // add favicon
 add_action('wp_head', function()
 {

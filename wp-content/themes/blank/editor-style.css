@@ -1,0 +1,25 @@
+/* custom colors */
+/*
+.mceContentBody.wp-editor {
+    background-color: #000;
+    color: #fff;
+}
+*/
+
+/* reset table styles */
+.mceContentBody.wp-editor table {
+    table-layout: fixed;
+}
+.mceContentBody.wp-editor table td {
+    width: auto !important;
+}
+.mceContentBody.wp-editor table td p {
+    margin-bottom: 10px;
+    margin-top: 0;
+}
+.mceContentBody.wp-editor table td p:first-child {
+    margin-top: 0;
+}
+.mceContentBody.wp-editor table td p:last-child {
+    margin-bottom: 0;
+}
