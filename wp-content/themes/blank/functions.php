@@ -34,6 +34,9 @@ if (!is_production() && isset($_SERVER['SERVER_ADMIN']) && $_SERVER['SERVER_ADMI
 // hide toolbar in frontend
 add_filter('show_admin_bar', '__return_false');
 
+// prevent resize of big images
+add_filter('big_image_size_threshold', '__return_false');
+
 // add async defer to javascript files
 add_filter( 'script_loader_tag', function ( $tag, $handle ) {    
     if( is_admin() || $GLOBALS['pagenow'] == 'wp-login.php' )
