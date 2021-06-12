@@ -24,12 +24,17 @@ add_filter( 'recovery_mode_email', function( $email, $url ) {
 }, 10, 2 );
 
 // always send mails on production to developer
-if (!is_production() && isset($_SERVER['SERVER_ADMIN']) && $_SERVER['SERVER_ADMIN'] != '') {
-    add_filter( 'wp_mail',function($data) {
-        $data['to'] = $_SERVER['SERVER_ADMIN'];
+if (!is_production()) {
+    add_filter( 'wp_mail', function($data) {
+        $data['to'] = isset($_SERVER['SERVER_ADMIN']) && $_SERVER['SERVER_ADMIN'] != '' && strpos($_SERVER['SERVER_ADMIN'], 'webmaster@') === false
+            ? $_SERVER['SERVER_ADMIN']
+            : 'support@close2.de';
         return $data;
     });
 }
+
+// remove privacy policy link from login form
+add_filter('the_privacy_policy_link', '__return_empty_string');
 
 // hide toolbar in frontend
 add_filter('show_admin_bar', '__return_false');
