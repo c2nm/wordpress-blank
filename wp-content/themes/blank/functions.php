@@ -39,8 +39,19 @@ add_filter('the_privacy_policy_link', '__return_empty_string');
 // hide toolbar in frontend
 add_filter('show_admin_bar', '__return_false');
 
-// prevent resize of big images
+// prevent resize of big images >2k (wp >= 5.3 by default creates -scaled versions when higher)
 add_filter('big_image_size_threshold', '__return_false');
+
+// increase image quality of resized images
+//add_filter('jpeg_quality', function($arg) { return 100; });
+
+// force the use imagemagick (wp uses it by default when installed; check with site health > report)
+//add_filter('wp_image_editors', function() { return array('WP_Image_Editor_Imagick'); });
+
+// don't strip exif/iptc data from images
+// only works with imagemagick enabled and when no other plugins interfer or reset it
+// also never strips copyright information when set to true(!)
+//add_filter('image_strip_meta', false);
 
 // add async defer to javascript files
 add_filter( 'script_loader_tag', function ( $tag, $handle ) {    
