@@ -17,6 +17,12 @@ add_action('init', function () {
     }
 });
 
+// always enable "show hidden characters" in tinymce
+add_filter('tiny_mce_before_init', function($settings) {
+    $settings['visualchars_default_state'] = true;
+    return $settings;
+});
+
 // disable email bug alerts
 add_filter( 'recovery_mode_email', function( $email, $url ) {
     $email['to'] = 'unknown@local';
