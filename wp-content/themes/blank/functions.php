@@ -223,7 +223,11 @@ add_editor_style();
 // add favicon
 add_action('wp_head', function()
 {
-    echo '<link rel="icon" type="image/png" sizes="32x32" href="/favicon.png">';
+    echo '<link rel="icon" type="image/png" sizes="32x32" href="' . site_url() . '/favicon.png">';
+});
+add_action('admin_head', function()
+{
+    echo '<link rel="icon" type="image/png" sizes="32x32" href="' . site_url() . '/favicon.png">';
 });
 
 // add menus
