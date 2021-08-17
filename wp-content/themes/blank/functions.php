@@ -39,6 +39,13 @@ if (!is_production()) {
     });
 }
 
+// add custom yoast separator
+add_filter('wpseo_separator_options', function ($separators) {
+    return array_merge($separators, [
+        'sc-doubleslash' => '//'
+    ]);
+});
+
 // remove privacy policy link from login form
 add_filter('the_privacy_policy_link', '__return_empty_string');
 
