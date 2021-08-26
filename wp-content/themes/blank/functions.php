@@ -243,7 +243,7 @@ add_action('after_setup_theme', function () {
     }
 });
 // picture img render helper
-function renderImage($image, $class = null, $ratio_large = 1, $ratio_medium = 1, $ratio_small = 1)
+function renderImage($image, $class = null, $ratio_large = 1, $ratio_medium = 1, $ratio_small = 1, $lazy = true)
 {
     echo '<picture>';
     for (
@@ -252,34 +252,29 @@ function renderImage($image, $class = null, $ratio_large = 1, $ratio_medium = 1,
         $i = $i + 100
     ) {
         $size = null;
-        if ($i >= getMediaBreakpoints()[1]) {
-            $ratio = $ratio_large;
-        } elseif ($i >= getMediaBreakpoints()[0]) {
-            $ratio = $ratio_medium;
-        } else {
-            $ratio = $ratio_small;
-        }
+        if ($i >= getMediaBreakpoints()[1]) { $ratio = $ratio_large; }
+        elseif ($i >= getMediaBreakpoints()[0]) { $ratio = $ratio_medium; }
+        else { $ratio = $ratio_small; }
         foreach (array_reverse(getCommonScreenResolutions()) as $resolutions__value) {
             if ($resolutions__value >= $i * $ratio) {
                 $size = $resolutions__value;
             }
         }
-        echo '<source media="(max-width: ' .
-            $i .
-            'px)" srcset="' .
-            $image['sizes'][$size . 'x'] .
-            '" data-size="' .
-            $size .
-            'x' .
-            '">';
+        echo '<source media="(max-width: ' . $i . 'px)" srcset="' . $image['sizes'][$size . 'x'] . '" data-size="' . $size . 'x' . '">';
+    }
+    $default_size = null;
+    foreach(getCommonScreenResolutions() as $resolutions__value) {
+        if( $resolutions__value <= getMediaBreakpoints()[0] ) { $default_size = $resolutions__value; }
+        else { break; }
     }
     echo '<img' .
         ($class !== null ? ' class="' . $class . '"' : '') .
-        ' src="' .
-        $image['url'] .
-        '" alt="' .
-        $image['alt'] .
-        '" />';
+        ($lazy === true ? ' loading="lazy"' : '') .
+        ' width="'.$image['sizes'][$default_size.'x-width'].'"'.
+        ' height="'.$image['sizes'][$default_size.'x-height'].'"'.
+        ' src="' . $image['url'] . '"'.
+        ' alt="' . $image['alt'] . '"'.
+    ' />';
     echo '</picture>';
 }
 
