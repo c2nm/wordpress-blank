@@ -180,6 +180,12 @@ if(1==1) {
             $stylesheet = str_replace('url(\'../_', 'url(\'' . get_bloginfo('template_directory') . '/_', $stylesheet);
             $stylesheet = str_replace('url(../_', 'url(' . get_bloginfo('template_directory') . '/_', $stylesheet);
             echo $stylesheet;
+            // this is how to embed adobe fonts (typekit)
+            /*
+            echo PHP_EOL;
+            $stylesheet = file_get_contents('https://use.typekit.net/xxxxxxx.css');
+            echo $stylesheet;
+            */
             echo '</style>';
         }
     });
