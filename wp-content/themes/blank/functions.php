@@ -255,7 +255,7 @@ function renderImage($image, $class = null, $ratio_large = 1, $ratio_medium = 1,
     for (
         $i = floor(getCommonScreenResolutions()[0] / 100) * 100;
         $i <= ceil(array_reverse(getCommonScreenResolutions())[0] / 100) * 100;
-        $i = $i + 100
+        $i = $i + 200
     ) {
         $size = null;
         if ($i >= getMediaBreakpoints()[1]) { $ratio = $ratio_large; }
