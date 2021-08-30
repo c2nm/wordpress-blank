@@ -9,6 +9,16 @@ function is_production()
     return (strpos($_SERVER['HTTP_HOST'], '.local') === false && strpos($_SERVER['HTTP_HOST'], 'close2dev') === false && strpos($_SERVER['HTTP_HOST'], '192.168.178') === false);
 }
 
+// modify spam blocklist (wpcf7): add more whitelisted keywords
+add_filter('option_disallowed_keys', function($input) {
+    if( $input != '' ) {
+        foreach(['online.de'] as $whitelist__value) {
+            $input = str_replace($whitelist__value, 'MANUALLY_DISABLED_KEYWORD', $input);
+        }
+    }
+    return $input;
+}, PHP_INT_MAX);
+
 // block subscribers from admin
 add_action('init', function () {
     if (is_admin() && !defined('DOING_AJAX') && current_user_can('subscriber')) {
