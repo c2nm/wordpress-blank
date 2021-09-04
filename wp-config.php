@@ -47,8 +47,6 @@ define( 'NONCE_SALT',       'pruocuviToGr*dt`&G@TO&u`XsoA1F$FR>KW%vTLe7^LIuT8Zmm
 
 $table_prefix = 'custom_';
 
-define( 'WP_DEBUG', false );
-
 if ( ! defined( 'ABSPATH' ) ) {
 	define( 'ABSPATH', dirname( __FILE__ ) . '/' );
 }

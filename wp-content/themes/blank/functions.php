@@ -21,7 +21,7 @@ add_filter('option_disallowed_keys', function($input) {
 
 // block subscribers from admin
 add_action('init', function () {
-    if (is_admin() && !defined('DOING_AJAX') && current_user_can('subscriber')) {
+    if (is_admin() && !defined('DOING_AJAX') && current_user_can('read') && !current_user_can('edit_posts')) {
         wp_redirect(home_url());
         die();
     }
