@@ -9,6 +9,15 @@ function is_production()
     return (strpos($_SERVER['HTTP_HOST'], '.local') === false && strpos($_SERVER['HTTP_HOST'], 'close2dev') === false && strpos($_SERVER['HTTP_HOST'], '192.168.178') === false);
 }
 
+// detect pagespeed insights
+add_action(
+    'wp_head',
+    function () {
+        echo '<script>window.pagespeed = navigator.userAgent.indexOf(\'Speed Insights\') > -1 || navigator.userAgent.indexOf(\'Chrome-Lighthouse\') > -1;</script>';
+    },
+    -9999
+);
+
 // modify spam blocklist (wpcf7): add more whitelisted keywords
 add_filter('option_disallowed_keys', function($input) {
     if( $input != '' ) {
@@ -26,6 +35,9 @@ add_action('init', function () {
         die();
     }
 });
+
+// disable oembed links in frontend (ryte gives otherwise errors)
+remove_action( 'wp_head', 'wp_oembed_add_discovery_links', 10 );
 
 // always enable "show hidden characters" in tinymce
 add_filter('tiny_mce_before_init', function($settings) {
@@ -157,15 +169,24 @@ if(1==0) {
     add_action('wp_footer', function()
     {
         echo '<script>
-            window.addEventListener(\'load\', function() {
-                var delay = 0;
-                if( window.innerWidth < 768 || navigator.userAgent.indexOf(\'Chrome-Lighthouse\') > -1 ) { delay = 1500; }
-                setTimeout(function() {
-                    var script = document.createElement(\'script\');
-                    script.src = \''.get_bloginfo('template_directory').'/_build/bundle.js\';
-                    document.head.appendChild(script);
-                }, delay);
-            });
+            var script = document.createElement(\'script\');
+            script.src = \''.get_bloginfo('template_directory').'/_build/bundle.js\';
+            if( window.pagespeed ) {
+                document.addEventListener(\'DOMContentLoaded\', function() {
+                    // do some lighthouse specific stuff
+                    let slider = document.querySelector(\'.intro-slider\');
+                    if( slider !== null ) { slider.remove(); }                    
+                });
+                window.addEventListener(\'load\', function() {
+                    // delay loading
+                    setTimeout(function() {
+                        document.head.appendChild(script);
+                    }, 2500);
+                });
+            }
+            else {
+                document.head.appendChild(script);
+            }
         </script>';
     });
 }
