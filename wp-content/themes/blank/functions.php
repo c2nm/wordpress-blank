@@ -3,6 +3,18 @@
 require_once(get_template_directory().'/vendor/autoload.php');
 require_once(get_template_directory().'/_php/_load.php');
 
+// disable frontend/backend on testing
+if( strpos($_SERVER['HTTP_HOST'], 'close2dev') !== false ) {
+    // frontend redirect to backend
+    if( !is_admin() && !in_array($GLOBALS['pagenow'], ['wp-login.php', 'wp-register.php']) ) { 
+        //wp_redirect(get_admin_url()); die();
+    }
+    // disable backend also
+    else {
+        //die();
+    }
+}
+
 // environment
 function is_production()
 {
@@ -260,6 +272,7 @@ if(1==0) {
 add_theme_support( 'title-tag' );
 add_theme_support( 'automatic-feed-links' );
 add_theme_support( 'post-thumbnails' );
+add_theme_support( 'html5', ['comment-list', 'comment-form', 'search-form', 'gallery', 'caption', 'style', 'script'] );
 
 // add more thumbnail sizes
 // besides default ones:
