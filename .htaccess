@@ -6,6 +6,7 @@ RedirectMatch 404 composer.json$
 RedirectMatch 404 composer.lock$
 
 # password on testing
+<IfModule !mod_win32.c>
 SetEnvIf HOST "close2dev\.de" protected
 #SetEnvIf Request_URI "wp-json" !protected
 <If "%{THE_REQUEST} =~ m#wp-json#">
@@ -21,6 +22,7 @@ require valid-user
 Allow from all
 Deny from env=protected
 Satisfy any
+</IfModule>
 
 # increase limits via .htaccess (this only works when PHP is not running in CGI mode)
 <IfModule mod_php7.c>
