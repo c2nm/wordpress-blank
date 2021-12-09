@@ -31,6 +31,9 @@ else
     define('WP_DEBUG_LOG', false);
     define('WP_DEBUG_DISPLAY', false);
     define('DIEONDBERROR', false);
+    // increase security on production and force httponly and secure on all php session cookies
+    ini_set('session.cookie_httponly', 1);
+    ini_set('session.cookie_secure', 1);
 }
 
 define('DB_CHARSET', 'utf8mb4');

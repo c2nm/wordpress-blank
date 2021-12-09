@@ -417,6 +417,9 @@ if( !is_production() )
 	]);
 }
 
+/* disable quote conversion in blog posts (WordPress e.g. auto converts "" into „“ */
+//add_filter('run_wptexturize', '__return_false');
+
 // remove emojis
 function disable_emojis()
 {
