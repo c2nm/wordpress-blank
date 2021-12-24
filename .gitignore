@@ -7,3 +7,6 @@
 /logs/
 /usage/
 /wp-content/uploads/cache/
+/wp-content/uploads/backwpup-*/
+/wp-content/wflogs/
+/.user.ini
