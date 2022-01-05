@@ -9,6 +9,13 @@ RedirectMatch 404 composer.lock$
 <IfModule !mod_win32.c>
 SetEnvIf HOST "close2dev\.de" protected
 #SetEnvIf Request_URI "wp-json" !protected
+# allow wordfence
+SetEnvIf Remote_Addr "^44\.239\.130\.172$" !protected
+SetEnvIf Remote_Addr "^44\.238\.191\.15$" !protected
+SetEnvIf Remote_Addr "^35\.155\.126\.231$" !protected
+SetEnvIf Remote_Addr "^54\.68\.32\.247$" !protected
+SetEnvIf Remote_Addr "^44\.235\.211\.232$" !protected
+SetEnvIf Remote_Addr "^54\.71\.203\.174$" !protected
 <If "%{THE_REQUEST} =~ m#wp-json#">
 SetEnvIf Request_URI ".*" !protected
 </If>
