@@ -100,7 +100,7 @@ add_filter('big_image_size_threshold', '__return_false');
 // also never strips copyright information when set to true(!)
 //add_filter('image_strip_meta', false);
 
-// add async defer to javascript files
+// add async defer to javascript files (be careful when using this!)
 add_filter( 'script_loader_tag', function ( $tag, $handle ) {    
     if( is_admin() || $GLOBALS['pagenow'] == 'wp-login.php' )
     {
@@ -116,7 +116,7 @@ add_filter('script_loader_tag', function($tag, $handle)
     return $tag;
 }, 10, 2);
 
-// disable jquery and other scripts added by plugins
+// disable jquery and other scripts added by plugins (be careful when using this!)
 // if you really need them bundle them locally(!) in your package.json
 add_action('wp_enqueue_scripts', function()
 {
