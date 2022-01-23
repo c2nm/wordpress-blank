@@ -436,6 +436,9 @@ add_action( 'init', 'disable_emojis' );
 // remove wordpress version number
 remove_action('wp_head', 'wp_generator');
 
+// disable welcome emails on multisite registrations
+add_filter( 'wpmu_welcome_notification', '__return_false' );
+
 // remove text content editors on all pages (to fully use acf fields) #wordpress
 add_action('admin_init', function()
 {
