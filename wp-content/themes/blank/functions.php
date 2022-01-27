@@ -48,6 +48,9 @@ add_action('init', function () {
     }
 });
 
+// disable backend language switcher
+add_filter( 'login_display_language_dropdown', '__return_false' );
+
 // disable oembed links in frontend (ryte gives otherwise errors)
 remove_action( 'wp_head', 'wp_oembed_add_discovery_links', 10 );
 
