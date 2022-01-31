@@ -119,6 +119,11 @@ add_filter('script_loader_tag', function($tag, $handle)
     return $tag;
 }, 10, 2);
 
+// disable global gutenberg styles in frontend
+add_action('wp_enqueue_scripts', function() {
+    wp_dequeue_style('global-styles');
+});
+
 // disable jquery and other scripts added by plugins (be careful when using this!)
 // if you really need them bundle them locally(!) in your package.json
 add_action('wp_enqueue_scripts', function()
