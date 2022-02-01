@@ -3,6 +3,15 @@
 require_once(get_template_directory().'/vendor/autoload.php');
 require_once(get_template_directory().'/_php/_load.php');
 
+// remove all dashboard widgets
+add_action('wp_dashboard_setup', function() {
+    global $wp_meta_boxes;
+    // remove specific widget
+    //unset($wp_meta_boxes['dashboard']['side']['core']['dashboard_secondary']);
+    // remove all widgets
+    unset($wp_meta_boxes['dashboard']);
+}, PHP_INT_MAX);
+
 // disable frontend/backend on testing
 if( strpos($_SERVER['HTTP_HOST'], 'close2dev') !== false ) {
     // frontend redirect to backend
