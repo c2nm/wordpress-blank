@@ -60,8 +60,14 @@ add_action('init', function () {
 // disable backend language switcher
 add_filter( 'login_display_language_dropdown', '__return_false' );
 
-// disable oembed links in frontend (ryte gives otherwise errors)
+// remove oembed links in header (ryte gives otherwise errors)
 remove_action( 'wp_head', 'wp_oembed_add_discovery_links', 10 );
+// remove wp-json rest api links in header (ryte gives otherwise errors)
+remove_action('wp_head', 'rest_output_link_wp_head', 10);
+// remove windows live writer manifest in header
+remove_action('wp_head', 'wlwmanifest_link');
+// remove rsd link in header
+remove_action('wp_head', 'rsd_link');
 
 // always enable "show hidden characters" in tinymce
 add_filter('tiny_mce_before_init', function($settings) {
