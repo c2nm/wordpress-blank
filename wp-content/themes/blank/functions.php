@@ -494,6 +494,12 @@ add_filter('emr_enable_replace_and_search', function() {
     return false;
 }, 10, 0);
 
+// plugin "WebP Converter for Media": serve original image instead of webp-version for "Crop Featured Image" because webp-conversion is not yet ready at time of request
+add_filter('webpc_htaccess_mod_rewrite', function($rules, $path) {
+    $rules = str_replace('RewriteCond %{HTTP_ACCEPT} image/webp', "RewriteCond %{HTTP_ACCEPT} image/webp\n  # exclude resize in backend\n  RewriteCond %{QUERY_STRING} !cacheBreak=", $rules);
+    return $rules;
+}, 10, 2);
+
 // ascii art
 function ascii_art()
 {
