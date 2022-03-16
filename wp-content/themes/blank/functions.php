@@ -500,6 +500,25 @@ add_filter('webpc_htaccess_mod_rewrite', function($rules, $path) {
     return $rules;
 }, 10, 2);
 
+// clear cache for "WP Fastest Cache" programmatically every hour
+add_action('init', function () {
+    $task = 'wp_fastest_cache_clear_cache';
+    $frequency = 'hourly';
+    $scheduled = wp_next_scheduled($task);
+    add_action($task, function () {
+        if (function_exists('wpfc_clear_all_cache')) {
+            wpfc_clear_all_cache(true);
+        }
+    });
+    if (!wp_next_scheduled($task)) {
+        wp_schedule_event(
+            strtotime(date('Y-m-d H:00:00', strtotime('now + 1 hour'))),
+            $frequency,
+            $task
+        );
+    }
+});
+
 // ascii art
 function ascii_art()
 {
