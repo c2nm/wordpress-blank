@@ -503,7 +503,7 @@ add_filter('webpc_htaccess_mod_rewrite', function($rules, $path) {
 // clear cache for "WP Fastest Cache" programmatically every hour
 add_action('init', function () {
     $task = 'wp_fastest_cache_clear_cache';
-    $frequency = 'hourly';
+    $frequency = 'daily'; // hourly|twicedaily|daily
     $scheduled = wp_next_scheduled($task);
     add_action($task, function () {
         if (function_exists('wpfc_clear_all_cache')) {
