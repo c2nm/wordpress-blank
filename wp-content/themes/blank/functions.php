@@ -351,6 +351,46 @@ function renderImage($image, $class = null, $ratio_large = 1, $ratio_medium = 1,
     echo '</picture>';
 }
 
+// add cropped image sizes
+add_action('after_setup_theme', function () {
+    add_image_size('300x300', 300, 300, true);
+    add_image_size('400x500', 400, 500, true);
+    add_image_size('400x800', 400, 800, true);
+});
+
+// plugin "Crop-Thumbnails": only show only size that is needed in acf field (with e.g. "300x300" in description field)
+add_action('admin_footer', function () {
+    ?>
+    <script>
+    document.addEventListener('click', (e) => {
+        if( e.target.closest('.acf-field-image') ) {
+            if( e.target.matches('.acf-button') || e.target.matches('.acf-icon.-pencil') ) {
+                let size = e.target.closest('.acf-field-image').querySelector('.description').innerText;
+                if( size.match(/[0-9]+x[0-9]+/) ) {
+                    let opened = false;
+                    let t1 = setInterval(() => {
+                        if( opened === false && document.querySelector('.media-modal-content') !== null ) {
+                            opened = true;
+                            document.head.insertAdjacentHTML('beforeend',`<style class="hide-crop-images">
+                                .cptImageSizelist li:not(.cptImageSize-${size}) { display:none !important; }
+                            </style>`);
+                        }
+                        if( opened === true && document.querySelector('.media-modal-content') === null ) {
+                            opened = false;
+                            if( document.querySelector('.hide-crop-images') !== null ) {
+                                document.querySelector('.hide-crop-images').remove();
+                            }
+                            clearInterval(t1);
+                        }
+                    },1000);
+                }
+            }
+        }
+    });
+    </script>
+    <?php
+});
+
 // enable custom editor style
 add_editor_style();
 
