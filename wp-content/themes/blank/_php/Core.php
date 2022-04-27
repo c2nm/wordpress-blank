@@ -10,55 +10,66 @@ class Core
 
     private function init()
     {
+        /* general */
+        $this->addMenus();
+        $this->addFavicon();
+        $this->removeEmojis();
+        $this->asciiArtHelper();
+        $this->enableSvgUpload();
         $this->removeAllDashboardWidgets();
-        $this->disableFrontendBackendOnTesting();
         $this->environmentHelperFunction();
         $this->detectPageSpeedInsights();
-        $this->modifyWPCF7SpamBlocklist();
-        $this->blockSubscribersFromAdmin();
-        $this->disableBackendLanguageSwitcher();
         $this->removeBulkHeaderLinks();
         $this->alwaysEnableShowHiddenCharactersInTinyMce();
         $this->disableEmailBugAlerts();
         $this->alwaysSendMailsNotOnProductionToDeveloper();
-        $this->addCustomYoastSeparator();
-        $this->removePrivacyPolicyLinkFromLoginForm();
+        $this->removePrivacyPolicyLinkFromLogin();
         $this->hideToolbarInFrontend();
+        $this->addThemeSupportForBasicFeatures();
+        $this->enableCustomEditorStyle();
+        $this->disableFrontendBackendOnTesting();
+        $this->disableBackendLanguageSwitcher();
+        $this->disableAutoParagraph();
+        $this->disableUnneededArchives();
+        $this->disableMediaSlugsFromTakingAwayPageSlugs();
+        $this->disableWelcomeEmailsOnMultisiteRegistrations();
+        //$this->disableAutoQuoteConversion();
+
+        /* bundle */
+        $this->loadJs();
+        $this->loadCss();
+        //$this->makeStringsAvailableInJsWithoutLocalizeScript();
+
+        /* media */
+        $this->addBasicImageSizes();
         $this->preventResizeOfBigImages();
-        //$this->increaseImageQualityOfResizedImages();
         //$this->forceUseOfImageMagick();
         //$this->disableStripExifIptcFromImages();
+        //$this->increaseImageQualityOfResizedImages();
+        //$this->addVariousImageSizesAndPictureImgRenderHelper();
+
+        /* security */
+        $this->disableUserSniffing();
+        $this->blockSubscribersFromAdmin();
+        $this->removeAutoVersionFromScripts();
+        $this->removeWordPressVersionInHead();
+
+        /* performance */
         $this->addAsyncDeferToJsFiles();
         $this->removeTypeTextJavaScriptForValidation();
         $this->disableGlobalGutenbergStylesInFrontend();
         $this->disablejQueryAndOtherScriptsAddedByPlugins();
         //$this->disableAllScriptsStylesinFrontend();
-        //$this->makeStringsAvailableInJsWithoutLocalizeScript();
-        $this->loadJs();
-        $this->loadCss();
-        $this->addThemeSupportForBasicFeatures();
-        //$this->addVariousImageSizesAndPictureImgRenderHelper();
-        $this->addBasicImageSizes();
+
+        /* plugins */
+        $this->modifyWPCF7SpamBlocklist();
+        $this->addCustomYoastSeparator();
         $this->pluginCropThumnailsOnlyShowNeededSize();
-        $this->enableCustomEditorStyle();
-        $this->addFavicon();
-        $this->addMenus();
-        $this->disableAutoParagraph();
-        $this->removeAutoVersionFromScripts();
-        $this->disableUserSniffing();
-        $this->disableUnneededArchives();
-        $this->disableMediaSlugsFromTakingAwayPageSlugs();
-        //$this->disableAutoQuoteConversion();
-        $this->removeEmojis();
-        $this->removeWordPressVersionInHead();
-        $this->disableWelcomeEmailsOnMultisiteRegistrations();
         $this->removeTextContentEditorsOnAllPagesToFullyUseAcf();
         $this->reenableCustomMetaBoxRemovedByAcf();
-        $this->enableSvgUpload();
         $this->modifyOptionEnableMediaReplace();
         $this->fixPluginConflictOfWebPConverterAndCropThumbnails();
         $this->autoClearCacheForWpFastestCache();
-        $this->asciiArtHelper();
     }
 
     private function removeAllDashboardWidgets()
@@ -200,7 +211,7 @@ class Core
         });
     }
 
-    private function removePrivacyPolicyLinkFromLoginForm()
+    private function removePrivacyPolicyLinkFromLogin()
     {
         add_filter('the_privacy_policy_link', '__return_empty_string');
     }
