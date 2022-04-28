@@ -4,7 +4,7 @@
     },
     "autoload": {
         "psr-4": {
-            "WordPress\\": "_php/"
+            "WP\\": "_php/"
         }
     }
 }
