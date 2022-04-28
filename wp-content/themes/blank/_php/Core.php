@@ -1,5 +1,5 @@
 <?php
-namespace WordPress;
+namespace WP;
 
 class Core
 {
@@ -11,18 +11,16 @@ class Core
     private function init()
     {
         /* general */
-        $this->addMenus();
+        $this->addMenus(); /* OK */
         $this->addFavicon();
         $this->removeEmojis();
-        $this->asciiArtHelper();
         $this->enableSvgUpload();
         $this->removeAllDashboardWidgets();
-        $this->environmentHelperFunction();
         $this->detectPageSpeedInsights();
         $this->removeBulkHeaderLinks();
         $this->alwaysEnableShowHiddenCharactersInTinyMce();
         $this->disableEmailBugAlerts();
-        $this->alwaysSendMailsNotOnProductionToDeveloper();
+        $this->sendMailsNotOnProductionToDeveloper();
         $this->removePrivacyPolicyLinkFromLogin();
         $this->hideToolbarInFrontend();
         $this->addThemeSupportForBasicFeatures();
@@ -49,10 +47,10 @@ class Core
         //$this->addVariousImageSizesAndPictureImgRenderHelper();
 
         /* security */
-        $this->disableUserSniffing();
-        $this->blockSubscribersFromAdmin();
-        $this->removeAutoVersionFromScripts();
-        $this->removeWordPressVersionInHead();
+        $this->disableUserSniffing(); /* OK */
+        $this->blockSubscribersFromAdmin(); /* OK */
+        $this->removeAutoVersionFromScripts(); /* OK */
+        $this->removeWordPressVersionInHead(); /* OK */
 
         /* performance */
         $this->addAsyncDeferToJsFiles();
@@ -101,14 +99,11 @@ class Core
         }
     }
 
-    private function environmentHelperFunction()
+    public static function isProduction()
     {
-        function is_production()
-        {
-            return strpos($_SERVER['HTTP_HOST'], '.local') === false &&
-                strpos($_SERVER['HTTP_HOST'], 'close2dev') === false &&
-                strpos($_SERVER['HTTP_HOST'], '192.168.178') === false;
-        }
+        return strpos($_SERVER['HTTP_HOST'], '.local') === false &&
+            strpos($_SERVER['HTTP_HOST'], 'close2dev') === false &&
+            strpos($_SERVER['HTTP_HOST'], '192.168.178') === false;
     }
 
     private function detectPageSpeedInsights()
@@ -187,9 +182,9 @@ class Core
         );
     }
 
-    private function alwaysSendMailsNotOnProductionToDeveloper()
+    private function sendMailsNotOnProductionToDeveloper()
     {
-        if (!is_production()) {
+        if (!self::isProduction()) {
             add_filter('wp_mail', function ($data) {
                 $data['to'] =
                     isset($_SERVER['SERVER_ADMIN']) &&
@@ -430,7 +425,7 @@ class Core
         if (1 == 0) {
             // load css (critical)
             add_action('wp_head', function () {
-                if (file_exists(get_template_directory() . '/_build/bundle-critical.css') && is_production()) {
+                if (file_exists(get_template_directory() . '/_build/bundle-critical.css') && self::isProduction()) {
                     echo '<style>';
                     $stylesheet = file_get_contents(get_template_directory() . '/_build/bundle-critical.css');
                     // replace relative paths
@@ -459,7 +454,7 @@ class Core
                 echo '<link rel="preload" href="' .
                     get_bloginfo('template_directory') .
                     '/_build/bundle.css' .
-                    (!is_production() ? '?ver=' . mt_rand(1000, 9999) : '') .
+                    (!self::isProduction() ? '?ver=' . mt_rand(1000, 9999) : '') .
                     '" as="style" onload="this.onload=null;this.rel=\'stylesheet\'">';
                 echo '<noscript><link rel="stylesheet" href="' .
                     get_bloginfo('template_directory') .
@@ -500,76 +495,84 @@ class Core
         // - "thumbnail": 150x150
         // - "medium": 300x300
         // - "large": 1024x1024
-        function getCommonScreenResolutions()
-        {
-            return [360, 375, 414, 768, 1024, 1280, 1366, 1440, 1536, 1600, 1680, 1920, 2048, 2560, 4096];
-        }
-        function getMediaBreakpoints()
-        {
-            return [768, 1024];
-        }
         add_action('after_setup_theme', function () {
-            foreach (getCommonScreenResolutions() as $resolutions__value) {
+            foreach ($this->getCommonScreenResolutions() as $resolutions__value) {
                 add_image_size($resolutions__value . 'x', $resolutions__value, 0, false);
             }
         });
-        // picture img render helper
-        function renderImage($image, $class = null, $ratio_large = 1, $ratio_medium = 1, $ratio_small = 1, $lazy = true)
-        {
-            echo '<picture>';
-            for (
-                $i = floor(getCommonScreenResolutions()[0] / 100) * 100;
-                $i <= ceil(array_reverse(getCommonScreenResolutions())[0] / 100) * 100;
-                $i = $i + 200
-            ) {
-                $size = null;
-                if ($i >= getMediaBreakpoints()[1]) {
-                    $ratio = $ratio_large;
-                } elseif ($i >= getMediaBreakpoints()[0]) {
-                    $ratio = $ratio_medium;
-                } else {
-                    $ratio = $ratio_small;
-                }
-                foreach (array_reverse(getCommonScreenResolutions()) as $resolutions__value) {
-                    if ($resolutions__value >= $i * $ratio) {
-                        $size = $resolutions__value;
-                    }
-                }
-                echo '<source media="(max-width: ' .
-                    $i .
-                    'px)" srcset="' .
-                    $image['sizes'][$size . 'x'] .
-                    '" data-size="' .
-                    $size .
-                    'x' .
-                    '">';
+    }
+
+    public function renderImage(
+        $image,
+        $class = null,
+        $ratio_large = 1,
+        $ratio_medium = 1,
+        $ratio_small = 1,
+        $lazy = true
+    ) {
+        echo '<picture>';
+        for (
+            $i = floor($this->getCommonScreenResolutions()[0] / 100) * 100;
+            $i <= ceil(array_reverse($this->getCommonScreenResolutions())[0] / 100) * 100;
+            $i = $i + 200
+        ) {
+            $size = null;
+            if ($i >= $this->getMediaBreakpoints()[1]) {
+                $ratio = $ratio_large;
+            } elseif ($i >= $this->getMediaBreakpoints()[0]) {
+                $ratio = $ratio_medium;
+            } else {
+                $ratio = $ratio_small;
             }
-            $default_size = null;
-            foreach (getCommonScreenResolutions() as $resolutions__value) {
-                if ($resolutions__value <= getMediaBreakpoints()[0]) {
-                    $default_size = $resolutions__value;
-                } else {
-                    break;
+            foreach (array_reverse($this->getCommonScreenResolutions()) as $resolutions__value) {
+                if ($resolutions__value >= $i * $ratio) {
+                    $size = $resolutions__value;
                 }
             }
-            echo '<img' .
-                ($class !== null ? ' class="' . $class . '"' : '') .
-                ($lazy === true ? ' loading="lazy"' : '') .
-                ' width="' .
-                $image['sizes'][$default_size . 'x-width'] .
-                '"' .
-                ' height="' .
-                $image['sizes'][$default_size . 'x-height'] .
-                '"' .
-                ' src="' .
-                $image['url'] .
-                '"' .
-                ' alt="' .
-                $image['alt'] .
-                '"' .
-                ' />';
-            echo '</picture>';
+            echo '<source media="(max-width: ' .
+                $i .
+                'px)" srcset="' .
+                $image['sizes'][$size . 'x'] .
+                '" data-size="' .
+                $size .
+                'x' .
+                '">';
         }
+        $default_size = null;
+        foreach ($this->getCommonScreenResolutions() as $resolutions__value) {
+            if ($resolutions__value <= $this->getMediaBreakpoints()[0]) {
+                $default_size = $resolutions__value;
+            } else {
+                break;
+            }
+        }
+        echo '<img' .
+            ($class !== null ? ' class="' . $class . '"' : '') .
+            ($lazy === true ? ' loading="lazy"' : '') .
+            ' width="' .
+            $image['sizes'][$default_size . 'x-width'] .
+            '"' .
+            ' height="' .
+            $image['sizes'][$default_size . 'x-height'] .
+            '"' .
+            ' src="' .
+            $image['url'] .
+            '"' .
+            ' alt="' .
+            $image['alt'] .
+            '"' .
+            ' />';
+        echo '</picture>';
+    }
+
+    private function getMediaBreakpoints()
+    {
+        return [768, 1024];
+    }
+
+    private function getCommonScreenResolutions()
+    {
+        return [360, 375, 414, 768, 1024, 1280, 1366, 1440, 1536, 1600, 1680, 1920, 2048, 2560, 4096];
     }
 
     private function addBasicImageSizes()
@@ -652,35 +655,36 @@ class Core
 
     private function removeAutoVersionFromScripts()
     {
-        function wp_remove_version($src)
-        {
-            if (strpos($src, 'ver=')) {
-                $src = remove_query_arg('ver', $src);
-            }
-            // reload on every request on localhost
-            if (!is_production()) {
-                $src = add_query_arg('ver', mt_rand(1000, 9999), $src);
-            }
-            return $src;
+        add_filter('style_loader_src', [__CLASS__, 'removeAutoVersionFromScriptsFn'], 9999);
+        add_filter('script_loader_src', [__CLASS__, 'removeAutoVersionFromScriptsFn'], 9999);
+    }
+
+    public function removeAutoVersionFromScriptsFn($src)
+    {
+        if (strpos($src, 'ver=')) {
+            $src = remove_query_arg('ver', $src);
         }
-        add_filter('style_loader_src', 'wp_remove_version', 9999);
-        add_filter('script_loader_src', 'wp_remove_version', 9999);
+        // reload on every request on localhost
+        if (!self::isProduction()) {
+            $src = add_query_arg('ver', mt_rand(1000, 9999), $src);
+        }
+        return $src;
     }
 
     private function disableUserSniffing()
     {
         // source: https://www.wp-tweaks.com/hackers-can-find-your-wordpress-username
-        function redirect_to_home_if_author_parameter()
-        {
+        add_action('template_redirect', function () {
+            // redirect_to_home_if_author_parameter
             $is_author_set = get_query_var('author', '');
             if ($is_author_set != '' && !is_admin()) {
                 wp_redirect(home_url(), 301);
                 exit();
             }
-        }
-        add_action('template_redirect', 'redirect_to_home_if_author_parameter');
-        function disable_rest_endpoints($endpoints)
-        {
+        });
+
+        add_filter('rest_endpoints', function ($endpoints) {
+            // disable_rest_endpoints
             if (isset($endpoints['/wp/v2/users'])) {
                 unset($endpoints['/wp/v2/users']);
             }
@@ -688,15 +692,13 @@ class Core
                 unset($endpoints['/wp/v2/users/(?P<id>[\d]+)']);
             }
             return $endpoints;
-        }
-        add_filter('rest_endpoints', 'disable_rest_endpoints');
+        });
     }
 
     private function disableUnneededArchives()
     {
         // disable category / tag / date / author / archive / attachments / search route
-        function disable_uneeded_archives()
-        {
+        add_action('template_redirect', function () {
             if (is_category() || is_tag() || is_date() || is_author() || is_attachment() || is_search()) {
                 header('Status: 404 Not Found');
                 global $wp_query;
@@ -704,8 +706,7 @@ class Core
                 status_header(404);
                 nocache_headers();
             }
-        }
-        add_action('template_redirect', 'disable_uneeded_archives');
+        });
     }
 
     private function disableMediaSlugsFromTakingAwayPageSlugs()
@@ -826,12 +827,9 @@ class Core
         });
     }
 
-    private function asciiArtHelper()
+    public static function asciiArt()
     {
-        // ascii art
-        function ascii_art()
-        {
-            echo <<<EOD
+        echo <<<EOD
 <!--
 ____________/\\\\\\_______/\\\\\\\\\\\\\\\\\\_____________
 ___________/\\\\\\\\\\_____/\\\\\\///////\\\\\\__________
@@ -845,6 +843,5 @@ ___________________\\///_____\\///////////////__
 -->
 
 EOD;
-        }
     }
 }

@@ -1,5 +1,5 @@
 <?php
-namespace WordPress;
+namespace WP;
 
 new Core();
 new Example();

@@ -1,5 +1,5 @@
 <?php
-namespace WordPress;
+namespace WP;
 
 use vielhuber\stringhelper\__;
 
@@ -12,7 +12,6 @@ class Example
 
     private function init()
     {
-        __::d(42);
+        //__::d(42);
     }
 }
-
