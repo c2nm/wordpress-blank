@@ -68,6 +68,7 @@ class Core
         $this->modifyOptionEnableMediaReplace();
         $this->fixPluginConflictOfWebPConverterAndCropThumbnails();
         $this->autoClearCacheForWpFastestCache();
+        $this->yoastShowEmptyCategoriesInSitemap();
     }
 
     private function removeAllDashboardWidgets()
@@ -825,6 +826,12 @@ class Core
                 wp_schedule_event(strtotime(date('Y-m-d H:00:00', strtotime('now + 1 hour'))), $frequency, $task);
             }
         });
+    }
+
+    private static function yoastShowEmptyCategoriesInSitemap() {
+        add_filter( 'wpseo_sitemap_exclude_empty_terms', function() {
+            return false;
+        }, 10, 2);
     }
 
     public static function asciiArt()
