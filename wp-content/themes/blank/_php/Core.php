@@ -12,26 +12,27 @@ class Core
     {
         /* general */
         $this->addMenus(); /* OK */
-        $this->addFavicon();
-        $this->removeEmojis();
-        $this->enableSvgUpload();
-        $this->removeAllDashboardWidgets();
-        $this->detectPageSpeedInsights();
-        $this->removeBulkHeaderLinks();
-        $this->alwaysEnableShowHiddenCharactersInTinyMce();
-        $this->disableEmailBugAlerts();
-        $this->sendMailsNotOnProductionToDeveloper();
-        $this->removePrivacyPolicyLinkFromLogin();
-        $this->hideToolbarInFrontend();
-        $this->addThemeSupportForBasicFeatures();
-        $this->enableCustomEditorStyle();
-        $this->disableFrontendBackendOnTesting();
-        $this->disableBackendLanguageSwitcher();
-        $this->disableAutoParagraph();
-        $this->disableUnneededArchives();
-        $this->disableMediaSlugsFromTakingAwayPageSlugs();
-        $this->disableWelcomeEmailsOnMultisiteRegistrations();
-        //$this->disableAutoQuoteConversion();
+        $this->addFavicon(); /* OK */
+        $this->removeEmojis(); /* OK */
+        $this->enableSvgUpload(); /* OK */
+        $this->removeAllDashboardWidgets(); /* OK */
+        $this->detectPageSpeedInsights(); /* OK */
+        $this->removeBulkHeaderLinks(); /* OK */
+        $this->alwaysEnableShowHiddenCharactersInTinyMce(); /* OK */
+        $this->disableEmailBugAlerts(); /* OK */
+        $this->sendMailsNotOnProductionToDeveloper(); /* OK */
+        $this->removePrivacyPolicyLinkFromLogin(); /* OK */
+        $this->resetWordPressLoginFormLayout(); /* OK */
+        $this->hideToolbarInFrontend(); /* OK */
+        $this->addThemeSupportForBasicFeatures(); /* OK */
+        $this->enableCustomEditorStyle(); /* OK */
+        $this->disableBackendLanguageSwitcher(); /* OK */
+        $this->disableAutoParagraph(); /* OK */
+        $this->disableUnneededArchives(); /* OK */
+        $this->disableMediaSlugsFromTakingAwayPageSlugs(); /* OK */
+        $this->disableWelcomeEmailsOnMultisiteRegistrations(); /* OK */
+        //$this->disableFrontendBackendOnTesting(); /* OK */
+        //$this->disableAutoQuoteConversion(); /* OK */
 
         /* bundle */
         $this->loadJs();
@@ -91,11 +92,11 @@ class Core
         if (strpos($_SERVER['HTTP_HOST'], 'close2dev') !== false) {
             // frontend redirect to backend
             if (!is_admin() && !in_array($GLOBALS['pagenow'], ['wp-login.php', 'wp-register.php'])) {
-                //wp_redirect(get_admin_url()); die();
+                wp_redirect(get_admin_url()); die();
             }
             // disable backend also
             else {
-                //die();
+                die();
             }
         }
     }
@@ -210,6 +211,38 @@ class Core
     private function removePrivacyPolicyLinkFromLogin()
     {
         add_filter('the_privacy_policy_link', '__return_empty_string');
+    }
+
+    private function resetWordPressLoginFormLayout() {
+        add_action( 'login_enqueue_scripts', function() {
+            if ( isset($GLOBALS['pagenow']) && $GLOBALS['pagenow'] === 'wp-login.php' ) { ?>
+                <script>
+                    document.addEventListener('DOMContentLoaded', () => {
+                        if( document.querySelector('input[name="rememberme"]') !== null ) {
+                            document.querySelector('input[name="rememberme"]').checked = true;
+                        }
+                    });
+                </script>
+                <style>
+                body {
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: center;
+                    align-items:center;
+                    min-height: 100vh;
+                }
+                #login {
+                    padding: 0 !important;
+                }
+                .login form {
+                    margin-top: 0 !important;
+                }
+                h1, #nav, #backtoblog {
+                    display:none;
+                }
+                </style>
+            <?php }
+        });
     }
 
     private function hideToolbarInFrontend()
