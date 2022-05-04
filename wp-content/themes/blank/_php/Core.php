@@ -34,18 +34,24 @@ class Core
         //$this->disableFrontendBackendOnTesting(); /* OK */
         //$this->disableAutoQuoteConversion(); /* OK */
 
-        /* bundle */
-        $this->loadJs();
-        $this->loadCss();
-        //$this->makeStringsAvailableInJsWithoutLocalizeScript();
+        /* js */
+        $this->loadJsBasicWithLocalize(); /* OK */
+        //$this->loadJsAdvanced(); /* OK */
+        //$this->loadJsWithJQuery(); /* OK */
+        //$this->makeStringsAvailableInJsWithoutLocalizeScript(); /* OK */
+
+        /* css */
+        $this->loadCssInline(); /* OK */
+        //$this->loadCssAdvanced(); /* OK */
+        //$this->loadCssBasic(); /* OK */
 
         /* media */
-        $this->addBasicImageSizes();
-        $this->preventResizeOfBigImages();
-        //$this->forceUseOfImageMagick();
-        //$this->disableStripExifIptcFromImages();
-        //$this->increaseImageQualityOfResizedImages();
-        //$this->addVariousImageSizesAndPictureImgRenderHelper();
+        $this->addBasicImageSizes(); /* OK */
+        $this->preventResizeOfBigImages(); /* OK */
+        //$this->forceUseOfImageMagick(); /* OK */
+        //$this->disableStripExifIptcFromImages(); /* OK */
+        //$this->increaseImageQualityOfResizedImages(); /* OK */
+        //$this->addVariousImageSizesForRenderHelper(); /* OK */
 
         /* security */
         $this->disableUserSniffing(); /* OK */
@@ -54,11 +60,11 @@ class Core
         $this->removeWordPressVersionInHead(); /* OK */
 
         /* performance */
-        $this->addAsyncDeferToJsFiles();
-        $this->removeTypeTextJavaScriptForValidation();
-        $this->disableGlobalGutenbergStylesInFrontend();
-        $this->disablejQueryAndOtherScriptsAddedByPlugins();
-        //$this->disableAllScriptsStylesinFrontend();
+        $this->addAsyncDeferToJsFiles(); /* OK */
+        $this->removeTypeTextJavaScriptForValidation(); /* OK */
+        $this->disableGlobalGutenbergStylesInFrontend(); /* OK */
+        $this->disablejQueryAndOtherScriptsAddedByPlugins(); /* OK */
+        //$this->disableAllScriptsStylesinFrontend(); /* OK */
 
         /* plugins */
         $this->modifyWPCF7SpamBlocklist();
@@ -92,7 +98,8 @@ class Core
         if (strpos($_SERVER['HTTP_HOST'], 'close2dev') !== false) {
             // frontend redirect to backend
             if (!is_admin() && !in_array($GLOBALS['pagenow'], ['wp-login.php', 'wp-register.php'])) {
-                wp_redirect(get_admin_url()); die();
+                wp_redirect(get_admin_url());
+                die();
             }
             // disable backend also
             else {
@@ -213,9 +220,10 @@ class Core
         add_filter('the_privacy_policy_link', '__return_empty_string');
     }
 
-    private function resetWordPressLoginFormLayout() {
-        add_action( 'login_enqueue_scripts', function() {
-            if ( isset($GLOBALS['pagenow']) && $GLOBALS['pagenow'] === 'wp-login.php' ) { ?>
+    private function resetWordPressLoginFormLayout()
+    {
+        add_action('login_enqueue_scripts', function () {
+            if (isset($GLOBALS['pagenow']) && $GLOBALS['pagenow'] === 'wp-login.php') { ?>
                 <script>
                     document.addEventListener('DOMContentLoaded', () => {
                         if( document.querySelector('input[name="rememberme"]') !== null ) {
@@ -265,7 +273,7 @@ class Core
 
     private function forceUseOfImageMagick()
     {
-        // wp uses it by default when installed; check with site health > report
+        // wp uses it by default when installed, so this is only needed in special environments; check with site health > report
         add_filter('wp_image_editors', function () {
             return ['WP_Image_Editor_Imagick'];
         });
@@ -333,9 +341,8 @@ class Core
 
     private function disableAllScriptsStylesinFrontend()
     {
-        /* this is a more strict variant: deregister all scripts/styles in frontend (disabled) */
-        /*
-        add_action('wp_enqueue_scripts', function() {
+        /* this is a more strict variant: deregister all scripts/styles in frontend */
+        add_action('wp_enqueue_scripts', function () {
             global $wp_styles;
             foreach ($wp_styles->queue as $style_handle) {
                 wp_dequeue_style($style_handle);
@@ -345,165 +352,154 @@ class Core
                 wp_dequeue_script($script_handle);
             }
         });
-        */
     }
 
     private function makeStringsAvailableInJsWithoutLocalizeScript()
     {
         // make strings available in js without specific registered script (access with window.settings.***)
-        /*
         add_action('wp_head', function () {
             ?>
             <script>
             var settings = <?php echo json_encode([
-                'baseurl' => gtbabel__(get_bloginfo('url')),
-                'tplurl' => gtbabel__(get_bloginfo('template_directory')),
-                'resturl' => gtbabel__(rest_url())
-            ]); ?>;
+                'baseurl' => get_bloginfo('url'),
+                'tplurl' => get_bloginfo('template_directory'),
+                'resturl' => rest_url(),
+            ]); ?>
             </script>
             <?php
         });
-        */
     }
 
-    private function loadJs()
+    private function loadJsBasicWithLocalize()
     {
-        /* js */
-        // load js (in header, because we use async)
-        if (1 == 1) {
-            add_action('wp_enqueue_scripts', function () {
-                wp_enqueue_script('script', get_bloginfo('template_directory') . '/_build/bundle.js', [], false, false);
-                // make urls available in js (access with window.settings.***)
-                wp_localize_script('script', 'settings', [
-                    'baseurl' => get_bloginfo('url'),
-                    'tplurl' => get_bloginfo('template_directory'),
-                    'resturl' => rest_url(),
-                    'lng' => defined('ICL_LANGUAGE_CODE') ? ICL_LANGUAGE_CODE : 'en',
-                    'nonce' => wp_create_nonce('wp_rest'),
-                ]);
-            });
-        }
+        // in header, because we use async
+        add_action('wp_enqueue_scripts', function () {
+            wp_enqueue_script('script', get_bloginfo('template_directory') . '/_build/bundle.js', [], false, false);
+            // make urls available in js (access with window.settings.***)
+            wp_localize_script('script', 'settings', [
+                'baseurl' => get_bloginfo('url'),
+                'tplurl' => get_bloginfo('template_directory'),
+                'resturl' => rest_url(),
+                'lng' => defined('ICL_LANGUAGE_CODE') ? ICL_LANGUAGE_CODE : 'en',
+                'nonce' => wp_create_nonce('wp_rest'),
+            ]);
+        });
+    }
+
+    private function loadJsAdvanced()
+    {
         /* further delay js loading (only use for highly optimized pages) */
-        if (1 == 0) {
-            add_action('wp_footer', function () {
-                echo '<script>
-            var script = document.createElement(\'script\');
-            script.src = \'' .
-                    get_bloginfo('template_directory') .
-                    '/_build/bundle.js\';
-            if( window.pagespeed ) {
-                document.addEventListener(\'DOMContentLoaded\', function() {
-                    // do some lighthouse specific stuff
-                    let slider = document.querySelector(\'.intro-slider\');
-                    if( slider !== null ) { slider.remove(); }                    
-                });
-                window.addEventListener(\'load\', function() {
-                    // delay loading
-                    setTimeout(function() {
-                        document.head.appendChild(script);
-                    }, 2500);
-                });
-            }
-            else {
-                document.head.appendChild(script);
-            }
-        </script>';
-            });
-        }
-        // basic loading
-        if (1 == 0) {
-            add_action('wp_enqueue_scripts', function () {
-                wp_enqueue_script('script', get_bloginfo('template_directory') . '/_build/bundle.js', ['jquery']);
-                wp_enqueue_script('jquery');
-            });
-        }
+        add_action('wp_footer', function () {
+            echo '<script>
+                var script = document.createElement(\'script\');
+                script.src = \'' .
+                get_bloginfo('template_directory') .
+                '/_build/bundle.js\';
+                if( window.pagespeed ) {
+                    document.addEventListener(\'DOMContentLoaded\', function() {
+                        // do some lighthouse specific stuff
+                        let slider = document.querySelector(\'.intro-slider\');
+                        if( slider !== null ) { slider.remove(); }                    
+                    });
+                    window.addEventListener(\'load\', function() {
+                        // delay loading
+                        setTimeout(function() {
+                            document.head.appendChild(script);
+                        }, 2500);
+                    });
+                }
+                else {
+                    document.head.appendChild(script);
+                }
+            </script>';
+        });
     }
 
-    private function loadCss()
+    private function loadJsWithJQuery()
     {
-        /* css */
-        /* option 1: fully embed css */
-        if (1 == 1) {
-            add_action('wp_head', function () {
-                if (file_exists(get_template_directory() . '/_build/bundle.css')) {
-                    echo '<style>';
-                    $stylesheet = file_get_contents(get_template_directory() . '/_build/bundle.css');
-                    // replace relative paths
-                    $stylesheet = str_replace(
-                        'url("../_',
-                        'url("' . get_bloginfo('template_directory') . '/_',
-                        $stylesheet
-                    );
-                    $stylesheet = str_replace(
-                        'url(\'../_',
-                        'url(\'' . get_bloginfo('template_directory') . '/_',
-                        $stylesheet
-                    );
-                    $stylesheet = str_replace(
-                        'url(../_',
-                        'url(' . get_bloginfo('template_directory') . '/_',
-                        $stylesheet
-                    );
-                    echo $stylesheet;
-                    // this is how to embed adobe fonts (typekit)
-                    /*
-            echo PHP_EOL;
-            $stylesheet = file_get_contents('https://use.typekit.net/xxxxxxx.css');
-            echo $stylesheet;
-            */
-                    echo '</style>';
-                }
-            });
-        }
-        /* option 2: split in critical/non-critical */
-        if (1 == 0) {
-            // load css (critical)
-            add_action('wp_head', function () {
-                if (file_exists(get_template_directory() . '/_build/bundle-critical.css') && self::isProduction()) {
-                    echo '<style>';
-                    $stylesheet = file_get_contents(get_template_directory() . '/_build/bundle-critical.css');
-                    // replace relative paths
-                    $stylesheet = str_replace(
-                        'url("../_',
-                        'url("' . get_bloginfo('template_directory') . '/_',
-                        $stylesheet
-                    );
-                    $stylesheet = str_replace(
-                        'url(\'../_',
-                        'url(\'' . get_bloginfo('template_directory') . '/_',
-                        $stylesheet
-                    );
-                    $stylesheet = str_replace(
-                        'url(../_',
-                        'url(' . get_bloginfo('template_directory') . '/_',
-                        $stylesheet
-                    );
-                    echo $stylesheet;
-                    echo '</style>';
-                }
-            });
-            // load css (non-critical)
-            add_action('wp_footer', function () {
-                // https://github.com/filamentgroup/loadCSS
-                echo '<link rel="preload" href="' .
-                    get_bloginfo('template_directory') .
-                    '/_build/bundle.css' .
-                    (!self::isProduction() ? '?ver=' . mt_rand(1000, 9999) : '') .
-                    '" as="style" onload="this.onload=null;this.rel=\'stylesheet\'">';
-                echo '<noscript><link rel="stylesheet" href="' .
-                    get_bloginfo('template_directory') .
-                    '/_build/bundle.css"></noscript>';
-                echo '<script>';
-                echo '(function(a){"use strict";a.loadCSS||(a.loadCSS=function(){});var b=loadCSS.relpreload={};if(b.support=function(){var d;try{d=a.document.createElement("link").relList.supports("preload")}catch(f){d=!1}return function(){return d}}(),b.bindMediaToggle=function(d){function f(){d.media=g}var g=d.media||"all";d.addEventListener?d.addEventListener("load",f):d.attachEvent&&d.attachEvent("onload",f),setTimeout(function(){d.rel="stylesheet",d.media="only x"}),setTimeout(f,3e3)},b.poly=function(){if(!b.support())for(var g,d=a.document.getElementsByTagName("link"),f=0;f<d.length;f++)g=d[f],"preload"!==g.rel||"style"!==g.getAttribute("as")||g.getAttribute("data-loadcss")||(g.setAttribute("data-loadcss",!0),b.bindMediaToggle(g))},!b.support()){b.poly();var c=a.setInterval(b.poly,500);a.addEventListener?a.addEventListener("load",function(){b.poly(),a.clearInterval(c)}):a.attachEvent&&a.attachEvent("onload",function(){b.poly(),a.clearInterval(c)})}"undefined"==typeof exports?a.loadCSS=loadCSS:exports.loadCSS=loadCSS})("undefined"==typeof global?this:global);';
-                echo '</script>';
-            });
-        }
-        /* option 3: basic embedding */
-        if (1 == 0) {
-            add_action('wp_enqueue_scripts', function () {
-                wp_enqueue_style('style', get_bloginfo('template_directory') . '/_build/bundle.css');
-            });
-        }
+        add_action('wp_enqueue_scripts', function () {
+            wp_enqueue_script('script', get_bloginfo('template_directory') . '/_build/bundle.js', ['jquery']);
+            wp_enqueue_script('jquery');
+        });
+    }
+
+    private function loadCssInline()
+    {
+        // fully embed css
+        add_action('wp_head', function () {
+            if (file_exists(get_template_directory() . '/_build/bundle.css')) {
+                echo '<style>';
+                $stylesheet = file_get_contents(get_template_directory() . '/_build/bundle.css');
+                // replace relative paths
+                $stylesheet = str_replace(
+                    'url("../_',
+                    'url("' . get_bloginfo('template_directory') . '/_',
+                    $stylesheet
+                );
+                $stylesheet = str_replace(
+                    'url(\'../_',
+                    'url(\'' . get_bloginfo('template_directory') . '/_',
+                    $stylesheet
+                );
+                $stylesheet = str_replace('url(../_', 'url(' . get_bloginfo('template_directory') . '/_', $stylesheet);
+                echo $stylesheet;
+                // this is how to embed adobe fonts (typekit)
+                /*
+                echo PHP_EOL;
+                $stylesheet = file_get_contents('https://use.typekit.net/xxxxxxx.css');
+                echo $stylesheet;
+                */
+                echo '</style>';
+            }
+        });
+    }
+
+    private function loadCssAdvanced()
+    {
+        // split in critical/non-critical
+        // load css (critical)
+        add_action('wp_head', function () {
+            if (file_exists(get_template_directory() . '/_build/bundle-critical.css') && self::isProduction()) {
+                echo '<style>';
+                $stylesheet = file_get_contents(get_template_directory() . '/_build/bundle-critical.css');
+                // replace relative paths
+                $stylesheet = str_replace(
+                    'url("../_',
+                    'url("' . get_bloginfo('template_directory') . '/_',
+                    $stylesheet
+                );
+                $stylesheet = str_replace(
+                    'url(\'../_',
+                    'url(\'' . get_bloginfo('template_directory') . '/_',
+                    $stylesheet
+                );
+                $stylesheet = str_replace('url(../_', 'url(' . get_bloginfo('template_directory') . '/_', $stylesheet);
+                echo $stylesheet;
+                echo '</style>';
+            }
+        });
+        // load css (non-critical)
+        add_action('wp_footer', function () {
+            // https://github.com/filamentgroup/loadCSS
+            echo '<link rel="preload" href="' .
+                get_bloginfo('template_directory') .
+                '/_build/bundle.css' .
+                (!self::isProduction() ? '?ver=' . mt_rand(1000, 9999) : '') .
+                '" as="style" onload="this.onload=null;this.rel=\'stylesheet\'">';
+            echo '<noscript><link rel="stylesheet" href="' .
+                get_bloginfo('template_directory') .
+                '/_build/bundle.css"></noscript>';
+            echo '<script>';
+            echo '(function(a){"use strict";a.loadCSS||(a.loadCSS=function(){});var b=loadCSS.relpreload={};if(b.support=function(){var d;try{d=a.document.createElement("link").relList.supports("preload")}catch(f){d=!1}return function(){return d}}(),b.bindMediaToggle=function(d){function f(){d.media=g}var g=d.media||"all";d.addEventListener?d.addEventListener("load",f):d.attachEvent&&d.attachEvent("onload",f),setTimeout(function(){d.rel="stylesheet",d.media="only x"}),setTimeout(f,3e3)},b.poly=function(){if(!b.support())for(var g,d=a.document.getElementsByTagName("link"),f=0;f<d.length;f++)g=d[f],"preload"!==g.rel||"style"!==g.getAttribute("as")||g.getAttribute("data-loadcss")||(g.setAttribute("data-loadcss",!0),b.bindMediaToggle(g))},!b.support()){b.poly();var c=a.setInterval(b.poly,500);a.addEventListener?a.addEventListener("load",function(){b.poly(),a.clearInterval(c)}):a.attachEvent&&a.attachEvent("onload",function(){b.poly(),a.clearInterval(c)})}"undefined"==typeof exports?a.loadCSS=loadCSS:exports.loadCSS=loadCSS})("undefined"==typeof global?this:global);';
+            echo '</script>';
+        });
+    }
+
+    private function loadCssBasic()
+    {
+        add_action('wp_enqueue_scripts', function () {
+            wp_enqueue_style('style', get_bloginfo('template_directory') . '/_build/bundle.css');
+        });
     }
 
     private function addThemeSupportForBasicFeatures()
@@ -522,7 +518,7 @@ class Core
         ]);
     }
 
-    private function addVariousImageSizesAndPictureImgRenderHelper()
+    private function addVariousImageSizesForRenderHelper()
     {
         // add more thumbnail sizes
         // besides default ones:
@@ -536,7 +532,7 @@ class Core
         });
     }
 
-    public function renderImage(
+    public static function renderImage(
         $image,
         $class = null,
         $ratio_large = 1,
@@ -544,21 +540,31 @@ class Core
         $ratio_small = 1,
         $lazy = true
     ) {
+        /* example call inside template:
+        echo \WP\Core::renderImage(
+            get_field('image', 2),
+            'test-class',
+            1,
+            1,
+            1,
+            true
+        );
+        */
         echo '<picture>';
         for (
-            $i = floor($this->getCommonScreenResolutions()[0] / 100) * 100;
-            $i <= ceil(array_reverse($this->getCommonScreenResolutions())[0] / 100) * 100;
+            $i = floor(self::getCommonScreenResolutions()[0] / 100) * 100;
+            $i <= ceil(array_reverse(self::getCommonScreenResolutions())[0] / 100) * 100;
             $i = $i + 200
         ) {
             $size = null;
-            if ($i >= $this->getMediaBreakpoints()[1]) {
+            if ($i >= self::getMediaBreakpoints()[1]) {
                 $ratio = $ratio_large;
-            } elseif ($i >= $this->getMediaBreakpoints()[0]) {
+            } elseif ($i >= self::getMediaBreakpoints()[0]) {
                 $ratio = $ratio_medium;
             } else {
                 $ratio = $ratio_small;
             }
-            foreach (array_reverse($this->getCommonScreenResolutions()) as $resolutions__value) {
+            foreach (array_reverse(self::getCommonScreenResolutions()) as $resolutions__value) {
                 if ($resolutions__value >= $i * $ratio) {
                     $size = $resolutions__value;
                 }
@@ -573,8 +579,8 @@ class Core
                 '">';
         }
         $default_size = null;
-        foreach ($this->getCommonScreenResolutions() as $resolutions__value) {
-            if ($resolutions__value <= $this->getMediaBreakpoints()[0]) {
+        foreach (self::getCommonScreenResolutions() as $resolutions__value) {
+            if ($resolutions__value <= self::getMediaBreakpoints()[0]) {
                 $default_size = $resolutions__value;
             } else {
                 break;
@@ -861,10 +867,16 @@ class Core
         });
     }
 
-    private static function yoastShowEmptyCategoriesInSitemap() {
-        add_filter( 'wpseo_sitemap_exclude_empty_terms', function() {
-            return false;
-        }, 10, 2);
+    private static function yoastShowEmptyCategoriesInSitemap()
+    {
+        add_filter(
+            'wpseo_sitemap_exclude_empty_terms',
+            function () {
+                return false;
+            },
+            10,
+            2
+        );
     }
 
     public static function asciiArt()
