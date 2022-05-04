@@ -11,72 +11,83 @@ class Core
     private function init()
     {
         /* general */
-        $this->addMenus(); /* OK */
-        $this->addFavicon(); /* OK */
-        $this->removeEmojis(); /* OK */
-        $this->enableSvgUpload(); /* OK */
-        $this->removeAllDashboardWidgets(); /* OK */
-        $this->detectPageSpeedInsights(); /* OK */
-        $this->removeBulkHeaderLinks(); /* OK */
-        $this->alwaysEnableShowHiddenCharactersInTinyMce(); /* OK */
-        $this->disableEmailBugAlerts(); /* OK */
-        $this->sendMailsNotOnProductionToDeveloper(); /* OK */
-        $this->removePrivacyPolicyLinkFromLogin(); /* OK */
-        $this->resetWordPressLoginFormLayout(); /* OK */
-        $this->hideToolbarInFrontend(); /* OK */
-        $this->addThemeSupportForBasicFeatures(); /* OK */
-        $this->enableCustomEditorStyle(); /* OK */
-        $this->disableBackendLanguageSwitcher(); /* OK */
-        $this->disableAutoParagraph(); /* OK */
-        $this->disableUnneededArchives(); /* OK */
-        $this->disableMediaSlugsFromTakingAwayPageSlugs(); /* OK */
-        $this->disableWelcomeEmailsOnMultisiteRegistrations(); /* OK */
-        //$this->disableFrontendBackendOnTesting(); /* OK */
-        //$this->disableAutoQuoteConversion(); /* OK */
+        $this->addMenus();
+        $this->addFavicon();
+        $this->removeEmojis();
+        $this->enableSvgUpload();
+        $this->removeAllDashboardWidgets();
+        $this->detectPageSpeedInsights();
+        $this->removeBulkHeaderLinks();
+        $this->alwaysEnableShowHiddenCharactersInTinyMce();
+        $this->disableEmailBugAlerts();
+        $this->sendMailsNotOnProductionToDeveloper();
+        $this->removePrivacyPolicyLinkFromLogin();
+        $this->resetWordPressLoginFormLayout();
+        $this->hideToolbarInFrontend();
+        $this->addThemeSupportForBasicFeatures();
+        $this->enableCustomEditorStyle();
+        $this->disableBackendLanguageSwitcher();
+        $this->disableAutoParagraph();
+        $this->disableUnneededArchives();
+        $this->disableMediaSlugsFromTakingAwayPageSlugs();
+        $this->disableWelcomeEmailsOnMultisiteRegistrations();
+        //$this->disableFrontendBackendOnTesting();
+        //$this->disableAutoQuoteConversion();
 
         /* js */
-        $this->loadJsBasicWithLocalize(); /* OK */
-        //$this->loadJsAdvanced(); /* OK */
-        //$this->loadJsWithJQuery(); /* OK */
-        //$this->makeStringsAvailableInJsWithoutLocalizeScript(); /* OK */
+        $this->loadJsBasicWithLocalize();
+        //$this->loadJsAdvanced();
+        //$this->loadJsWithJQuery();
+        //$this->makeStringsAvailableInJsWithoutLocalizeScript();
 
         /* css */
-        $this->loadCssInline(); /* OK */
-        //$this->loadCssAdvanced(); /* OK */
-        //$this->loadCssBasic(); /* OK */
+        $this->loadCssInline();
+        //$this->loadCssAdvanced();
+        //$this->loadCssBasic();
 
         /* media */
-        $this->addBasicImageSizes(); /* OK */
-        $this->preventResizeOfBigImages(); /* OK */
-        //$this->forceUseOfImageMagick(); /* OK */
-        //$this->disableStripExifIptcFromImages(); /* OK */
-        //$this->increaseImageQualityOfResizedImages(); /* OK */
-        //$this->addVariousImageSizesForRenderHelper(); /* OK */
+        $this->addBasicImageSizes();
+        $this->preventResizeOfBigImages();
+        //$this->forceUseOfImageMagick();
+        //$this->disableStripExifIptcFromImages();
+        //$this->increaseImageQualityOfResizedImages();
+        //$this->addVariousImageSizesForRenderHelper();
 
         /* security */
-        $this->disableUserSniffing(); /* OK */
-        $this->blockSubscribersFromAdmin(); /* OK */
-        $this->removeAutoVersionFromScripts(); /* OK */
-        $this->removeWordPressVersionInHead(); /* OK */
+        $this->disableUserSniffing();
+        $this->blockSubscribersFromAdmin();
+        $this->removeAutoVersionFromScripts();
+        $this->removeWordPressVersionInHead();
 
         /* performance */
-        $this->addAsyncDeferToJsFiles(); /* OK */
-        $this->removeTypeTextJavaScriptForValidation(); /* OK */
-        $this->disableGlobalGutenbergStylesInFrontend(); /* OK */
-        $this->disablejQueryAndOtherScriptsAddedByPlugins(); /* OK */
-        //$this->disableAllScriptsStylesinFrontend(); /* OK */
+        $this->addAsyncDeferToJsFiles();
+        $this->removeTypeTextJavaScriptForValidation();
+        $this->disableGlobalGutenbergStylesInFrontend();
+        $this->disablejQueryAndOtherScriptsAddedByPlugins();
+        //$this->disableAllScriptsStylesinFrontend();
 
         /* plugins */
-        $this->modifyWPCF7SpamBlocklist();
-        $this->addCustomYoastSeparator();
-        $this->pluginCropThumnailsOnlyShowNeededSize();
-        $this->removeTextContentEditorsOnAllPagesToFullyUseAcf();
-        $this->reenableCustomMetaBoxRemovedByAcf();
-        $this->modifyOptionEnableMediaReplace();
-        $this->fixPluginConflictOfWebPConverterAndCropThumbnails();
-        $this->autoClearCacheForWpFastestCache();
+        $this->yoastAddCustomSeparator();
         $this->yoastShowEmptyCategoriesInSitemap();
+        $this->enableMediaReplaceDisableOption();
+        $this->advancedCustomFieldsRemoveEditorsOnAllPages();
+        $this->advancedCustomFieldsReenableCustomMetaBox();
+        $this->webPConverterAndCropThumbnailsFixPluginConflict();
+        $this->autoClearCacheForWpFastestCache();
+        $this->cropThumbnailsOnlyShowNeededSize();
+        $this->blockListUpdaterModifySpamlist();
     }
+
+    /* public functions */
+
+    public static function isProduction()
+    {
+        return strpos($_SERVER['HTTP_HOST'], '.local') === false &&
+            strpos($_SERVER['HTTP_HOST'], 'close2dev') === false &&
+            strpos($_SERVER['HTTP_HOST'], '192.168.178') === false;
+    }
+
+    /* private functions */
 
     private function removeAllDashboardWidgets()
     {
@@ -108,13 +119,6 @@ class Core
         }
     }
 
-    public static function isProduction()
-    {
-        return strpos($_SERVER['HTTP_HOST'], '.local') === false &&
-            strpos($_SERVER['HTTP_HOST'], 'close2dev') === false &&
-            strpos($_SERVER['HTTP_HOST'], '192.168.178') === false;
-    }
-
     private function detectPageSpeedInsights()
     {
         add_action(
@@ -126,7 +130,7 @@ class Core
         );
     }
 
-    private function modifyWPCF7SpamBlocklist()
+    private function blockListUpdaterModifySpamlist()
     {
         // add more whitelisted keywords
         add_filter(
@@ -206,7 +210,7 @@ class Core
         }
     }
 
-    private function addCustomYoastSeparator()
+    private function yoastAddCustomSeparator()
     {
         add_filter('wpseo_separator_options', function ($separators) {
             return array_merge($separators, [
@@ -625,7 +629,7 @@ class Core
         });
     }
 
-    private function pluginCropThumnailsOnlyShowNeededSize()
+    private function cropThumbnailsOnlyShowNeededSize()
     {
         // plugin "Crop-Thumbnails": only show only size that is needed in acf field (with e.g. "300x300" in description field)
         add_action('admin_footer', function () {
@@ -783,7 +787,7 @@ class Core
         add_filter('wpmu_welcome_notification', '__return_false');
     }
 
-    private function removeTextContentEditorsOnAllPagesToFullyUseAcf()
+    private function advancedCustomFieldsRemoveEditorsOnAllPages()
     {
         add_action('admin_init', function () {
             remove_post_type_support('post', 'editor');
@@ -791,7 +795,7 @@ class Core
         });
     }
 
-    private function reenableCustomMetaBoxRemovedByAcf()
+    private function advancedCustomFieldsReenableCustomMetaBox()
     {
         add_filter('acf/settings/remove_wp_meta_box', '__return_false');
     }
@@ -818,7 +822,7 @@ class Core
         );
     }
 
-    private function modifyOptionEnableMediaReplace()
+    private function enableMediaReplaceDisableOption()
     {
         // disable in plugin "Enable Media Replace" second option "Datei ersetzen, aber neuen Dateinamen verwenden und alle Links automatisch aktualisieren"
         add_filter(
@@ -831,7 +835,7 @@ class Core
         );
     }
 
-    private function fixPluginConflictOfWebPConverterAndCropThumbnails()
+    private function webPConverterAndCropThumbnailsFixPluginConflict()
     {
         // plugin "WebP Converter for Media": serve original image instead of webp-version for "Crop Featured Image" because webp-conversion is not yet ready at time of request
         add_filter(
@@ -855,7 +859,6 @@ class Core
         add_action('init', function () {
             $task = 'wp_fastest_cache_clear_cache';
             $frequency = 'daily'; // hourly|twicedaily|daily
-            $scheduled = wp_next_scheduled($task);
             add_action($task, function () {
                 if (function_exists('wpfc_clear_all_cache')) {
                     wpfc_clear_all_cache(true);
@@ -881,9 +884,8 @@ class Core
 
     public static function asciiArt()
     {
-        echo <<<EOD
-<!--
-____________/\\\\\\_______/\\\\\\\\\\\\\\\\\\_____________
+        $rand = [
+            '____________/\\\\\\_______/\\\\\\\\\\\\\\\\\\_____________
 ___________/\\\\\\\\\\_____/\\\\\\///////\\\\\\__________
 __________/\\\\\\/\\\\\\____\\///______\\//\\\\\\________
 _________/\\\\\\/\\/\\\\\\______________/\\\\\\/________
@@ -891,9 +893,32 @@ ________/\\\\\\/__\\/\\\\\\___________/\\\\\\//_________
 _______/\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\_____/\\\\\\//___________
 _______\\///////////\\\\\\//____/\\\\\\/_____________
 __________________\\/\\\\\\_____/\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\__
-___________________\\///_____\\///////////////__
+___________________\\///_____\\///////////////__',
+            ' __   __       # _____       #
+/__/\/__/\     #/_____/\     #
+\  \ \: \ \__  #\:::_:\ \    #
+ \::\_\::\/_/\ #    _\:\|    #
+  \_:::   __\/ #   /::_/__   #
+       \::\ \  #   \:\____/\ #
+        \__\/  #    \_____\/ #
+               #             #',
+            '➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖
+➖🟩🟩➖➖🟩🟩➖🟩🟩🟩🟩🟩🟩➖
+➖🟩🟩➖➖🟩🟩➖🟩🟩🟩🟩🟩🟩➖
+➖🟩🟩➖➖🟩🟩➖➖➖➖➖🟩🟩➖
+➖🟩🟩➖➖🟩🟩➖➖➖➖➖🟩🟩➖
+➖🟩🟩🟩🟩🟩🟩➖🟩🟩🟩🟩🟩🟩➖
+➖🟩🟩🟩🟩🟩🟩➖🟩🟩🟩🟩🟩🟩➖
+➖➖➖➖➖🟩🟩➖🟩🟩➖➖➖➖➖
+➖➖➖➖➖🟩🟩➖🟩🟩➖➖➖➖➖
+➖➖➖➖➖🟩🟩➖🟩🟩🟩🟩🟩🟩➖
+➖➖➖➖➖🟩🟩➖🟩🟩🟩🟩🟩🟩➖
+➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖',
+        ];
+        $rand = $rand[mt_rand(0, count($rand) - 1)];
+        echo "<!--
+$rand
 -->
-
-EOD;
+";
     }
 }
