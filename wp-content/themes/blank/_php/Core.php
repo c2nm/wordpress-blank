@@ -87,6 +87,146 @@ class Core
             strpos($_SERVER['HTTP_HOST'], '192.168.178') === false;
     }
 
+    public static function renderImage(
+        $image,
+        $class = null,
+        $ratio_large = 1,
+        $ratio_medium = 1,
+        $ratio_small = 1,
+        $lazy = true
+    ) {
+        /* example call inside template:
+        echo \WP\Core::renderImage(
+            get_field('image', 2),
+            'test-class',
+            1,
+            1,
+            1,
+            true
+        );
+        */
+        echo '<picture>';
+        for (
+            $i = floor(self::getCommonScreenResolutions()[0] / 100) * 100;
+            $i <= ceil(array_reverse(self::getCommonScreenResolutions())[0] / 100) * 100;
+            $i = $i + 200
+        ) {
+            $size = null;
+            if ($i >= self::getMediaBreakpoints()[1]) {
+                $ratio = $ratio_large;
+            } elseif ($i >= self::getMediaBreakpoints()[0]) {
+                $ratio = $ratio_medium;
+            } else {
+                $ratio = $ratio_small;
+            }
+            foreach (array_reverse(self::getCommonScreenResolutions()) as $resolutions__value) {
+                if ($resolutions__value >= $i * $ratio) {
+                    $size = $resolutions__value;
+                }
+            }
+            echo '<source media="(max-width: ' .
+                $i .
+                'px)" srcset="' .
+                $image['sizes'][$size . 'x'] .
+                '" data-size="' .
+                $size .
+                'x' .
+                '">';
+        }
+        $default_size = null;
+        foreach (self::getCommonScreenResolutions() as $resolutions__value) {
+            if ($resolutions__value <= self::getMediaBreakpoints()[0]) {
+                $default_size = $resolutions__value;
+            } else {
+                break;
+            }
+        }
+        echo '<img' .
+            ($class !== null ? ' class="' . $class . '"' : '') .
+            ($lazy === true ? ' loading="lazy"' : '') .
+            ' width="' .
+            $image['sizes'][$default_size . 'x-width'] .
+            '"' .
+            ' height="' .
+            $image['sizes'][$default_size . 'x-height'] .
+            '"' .
+            ' src="' .
+            $image['url'] .
+            '"' .
+            ' alt="' .
+            $image['alt'] .
+            '"' .
+            ' />';
+        echo '</picture>';
+    }
+
+    public static function asciiArt()
+    {
+        $rand = [
+            '____________/\\\\\\_______/\\\\\\\\\\\\\\\\\\_____________
+___________/\\\\\\\\\\_____/\\\\\\///////\\\\\\__________
+__________/\\\\\\/\\\\\\____\\///______\\//\\\\\\________
+_________/\\\\\\/\\/\\\\\\______________/\\\\\\/________
+________/\\\\\\/__\\/\\\\\\___________/\\\\\\//_________
+_______/\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\_____/\\\\\\//___________
+_______\\///////////\\\\\\//____/\\\\\\/_____________
+__________________\\/\\\\\\_____/\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\__
+___________________\\///_____\\///////////////__',
+            ' __   __       # _____       #
+/__/\/__/\     #/_____/\     #
+\  \ \: \ \__  #\:::_:\ \    #
+ \::\_\::\/_/\ #    _\:\|    #
+  \_:::   __\/ #   /::_/__   #
+       \::\ \  #   \:\____/\ #
+        \__\/  #    \_____\/ #
+               #             #',
+            '➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖
+➖🟩🟩➖➖🟩🟩➖🟩🟩🟩🟩🟩🟩➖
+➖🟩🟩➖➖🟩🟩➖🟩🟩🟩🟩🟩🟩➖
+➖🟩🟩➖➖🟩🟩➖➖➖➖➖🟩🟩➖
+➖🟩🟩➖➖🟩🟩➖➖➖➖➖🟩🟩➖
+➖🟩🟩🟩🟩🟩🟩➖🟩🟩🟩🟩🟩🟩➖
+➖🟩🟩🟩🟩🟩🟩➖🟩🟩🟩🟩🟩🟩➖
+➖➖➖➖➖🟩🟩➖🟩🟩➖➖➖➖➖
+➖➖➖➖➖🟩🟩➖🟩🟩➖➖➖➖➖
+➖➖➖➖➖🟩🟩➖🟩🟩🟩🟩🟩🟩➖
+➖➖➖➖➖🟩🟩➖🟩🟩🟩🟩🟩🟩➖
+➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖',
+            '██╗  ██╗██████╗ 
+██║  ██║╚════██╗
+███████║ █████╔╝
+╚════██║██╔═══╝ 
+     ██║███████╗
+     ╚═╝╚══════╝',
+            '                      
+  _/  _/      _/_/    
+ _/  _/    _/    _/   
+_/_/_/_/      _/      
+   _/      _/         
+  _/    _/_/_/_/      
+                      ',
+            '       _              _       
+   _  /\ \          /\ \      
+  /\_\\ \ \        /  \ \     
+ / / / \ \ \      / /\ \ \    
+/ / /   \ \ \     \/_/\ \ \   
+\ \ \____\ \ \        / / /   
+ \ \________\ \      / / /    
+  \/________/\ \    / / /  _  
+            \ \ \  / / /_/\_\ 
+             \ \_\/ /_____/ / 
+              \/_/\________/  
+                              ',
+        ];
+        $rand = $rand[mt_rand(0, count($rand) - 1)];
+        echo "<!--
+$rand
+-->
+";
+    }
+
+    /* TODO! */
+
     /* private functions */
 
     private function removeAllDashboardWidgets()
@@ -536,79 +676,6 @@ class Core
         });
     }
 
-    public static function renderImage(
-        $image,
-        $class = null,
-        $ratio_large = 1,
-        $ratio_medium = 1,
-        $ratio_small = 1,
-        $lazy = true
-    ) {
-        /* example call inside template:
-        echo \WP\Core::renderImage(
-            get_field('image', 2),
-            'test-class',
-            1,
-            1,
-            1,
-            true
-        );
-        */
-        echo '<picture>';
-        for (
-            $i = floor(self::getCommonScreenResolutions()[0] / 100) * 100;
-            $i <= ceil(array_reverse(self::getCommonScreenResolutions())[0] / 100) * 100;
-            $i = $i + 200
-        ) {
-            $size = null;
-            if ($i >= self::getMediaBreakpoints()[1]) {
-                $ratio = $ratio_large;
-            } elseif ($i >= self::getMediaBreakpoints()[0]) {
-                $ratio = $ratio_medium;
-            } else {
-                $ratio = $ratio_small;
-            }
-            foreach (array_reverse(self::getCommonScreenResolutions()) as $resolutions__value) {
-                if ($resolutions__value >= $i * $ratio) {
-                    $size = $resolutions__value;
-                }
-            }
-            echo '<source media="(max-width: ' .
-                $i .
-                'px)" srcset="' .
-                $image['sizes'][$size . 'x'] .
-                '" data-size="' .
-                $size .
-                'x' .
-                '">';
-        }
-        $default_size = null;
-        foreach (self::getCommonScreenResolutions() as $resolutions__value) {
-            if ($resolutions__value <= self::getMediaBreakpoints()[0]) {
-                $default_size = $resolutions__value;
-            } else {
-                break;
-            }
-        }
-        echo '<img' .
-            ($class !== null ? ' class="' . $class . '"' : '') .
-            ($lazy === true ? ' loading="lazy"' : '') .
-            ' width="' .
-            $image['sizes'][$default_size . 'x-width'] .
-            '"' .
-            ' height="' .
-            $image['sizes'][$default_size . 'x-height'] .
-            '"' .
-            ' src="' .
-            $image['url'] .
-            '"' .
-            ' alt="' .
-            $image['alt'] .
-            '"' .
-            ' />';
-        echo '</picture>';
-    }
-
     private function getMediaBreakpoints()
     {
         return [768, 1024];
@@ -699,11 +766,23 @@ class Core
 
     private function removeAutoVersionFromScripts()
     {
-        add_filter('style_loader_src', [__CLASS__, 'removeAutoVersionFromScriptsFn'], 9999);
-        add_filter('script_loader_src', [__CLASS__, 'removeAutoVersionFromScriptsFn'], 9999);
+        add_filter(
+            'style_loader_src',
+            function ($src) {
+                return $this->removeAutoVersionFromScriptsFn($src);
+            },
+            9999
+        );
+        add_filter(
+            'script_loader_src',
+            function ($src) {
+                return $this->removeAutoVersionFromScriptsFn($src);
+            },
+            9999
+        );
     }
 
-    public function removeAutoVersionFromScriptsFn($src)
+    private function removeAutoVersionFromScriptsFn($src)
     {
         if (strpos($src, 'ver=')) {
             $src = remove_query_arg('ver', $src);
@@ -880,45 +959,5 @@ class Core
             10,
             2
         );
-    }
-
-    public static function asciiArt()
-    {
-        $rand = [
-            '____________/\\\\\\_______/\\\\\\\\\\\\\\\\\\_____________
-___________/\\\\\\\\\\_____/\\\\\\///////\\\\\\__________
-__________/\\\\\\/\\\\\\____\\///______\\//\\\\\\________
-_________/\\\\\\/\\/\\\\\\______________/\\\\\\/________
-________/\\\\\\/__\\/\\\\\\___________/\\\\\\//_________
-_______/\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\_____/\\\\\\//___________
-_______\\///////////\\\\\\//____/\\\\\\/_____________
-__________________\\/\\\\\\_____/\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\__
-___________________\\///_____\\///////////////__',
-            ' __   __       # _____       #
-/__/\/__/\     #/_____/\     #
-\  \ \: \ \__  #\:::_:\ \    #
- \::\_\::\/_/\ #    _\:\|    #
-  \_:::   __\/ #   /::_/__   #
-       \::\ \  #   \:\____/\ #
-        \__\/  #    \_____\/ #
-               #             #',
-            '➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖
-➖🟩🟩➖➖🟩🟩➖🟩🟩🟩🟩🟩🟩➖
-➖🟩🟩➖➖🟩🟩➖🟩🟩🟩🟩🟩🟩➖
-➖🟩🟩➖➖🟩🟩➖➖➖➖➖🟩🟩➖
-➖🟩🟩➖➖🟩🟩➖➖➖➖➖🟩🟩➖
-➖🟩🟩🟩🟩🟩🟩➖🟩🟩🟩🟩🟩🟩➖
-➖🟩🟩🟩🟩🟩🟩➖🟩🟩🟩🟩🟩🟩➖
-➖➖➖➖➖🟩🟩➖🟩🟩➖➖➖➖➖
-➖➖➖➖➖🟩🟩➖🟩🟩➖➖➖➖➖
-➖➖➖➖➖🟩🟩➖🟩🟩🟩🟩🟩🟩➖
-➖➖➖➖➖🟩🟩➖🟩🟩🟩🟩🟩🟩➖
-➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖',
-        ];
-        $rand = $rand[mt_rand(0, count($rand) - 1)];
-        echo "<!--
-$rand
--->
-";
     }
 }
