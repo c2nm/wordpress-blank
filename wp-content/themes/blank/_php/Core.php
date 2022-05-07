@@ -77,6 +77,7 @@ class Core
         $this->autoClearCacheForWpFastestCache();
         $this->cropThumbnailsOnlyShowNeededSize();
         $this->blockListUpdaterModifySpamlist();
+        //$this->advancedCustomFieldsAddQuickLinkToRefs();
     }
 
     /* public functions */
@@ -903,6 +904,51 @@ $rand
         $output = str_replace('height:300px;', 'height:100px;', $output);
         ob_end_clean();
         echo $output;
+    }
+
+    private function advancedCustomFieldsAddQuickLinkToRefs()
+    {
+        add_action('admin_head', function () {
+            ?>
+            <script>
+            let refs = {
+                test_name_1: 'post_type_name_1',
+                test_name_2: 'post_type_name_2'
+            };
+            let args = {
+                width: Math.round(window.innerWidth/2.2),
+                height: Math.round(window.innerHeight/1.2),
+                left: Math.round((window.innerWidth-(window.innerWidth/2.2))/2),
+                top: Math.round((window.innerHeight-(window.innerHeight/1.2))/1.4),
+                menubar: false,
+                scrollbars: false,
+                status: false,
+                toolbar: false
+            }
+            let specs = '';
+            Object.entries(args).forEach(([args__key, args__value]) => {
+                if( args__value === true ) { args__value = 1; }
+                if( args__value === false ) { args__value = 0; }
+                specs += args__key + '=' + args__value + ',';
+            });
+            specs = specs.substring(0, specs.length-1);
+            window.specs = specs;
+            document.addEventListener('DOMContentLoaded', () => {
+                if( document.querySelector('.acf-field-relationship') !== null ) {
+                    document.querySelectorAll('.acf-field-relationship').forEach($el => {
+                        if( $el.getAttribute('data-name') in refs ) {
+                            $el.querySelector('.acf-label').insertAdjacentHTML('beforeend',`
+                                <a href="#" onclick="window.open('<?php echo get_bloginfo(
+                                    'url'
+                                ); ?>/wp-admin/post-new.php?post_type=${refs[$el.getAttribute('data-name')]}','_blank',window.specs);return false;">Neues Element hinzufügen</a>
+                            `);
+                        }
+                    });
+                }
+            });
+            </script>
+	    <?php
+        });
     }
 
     private function advancedCustomFieldsReenableCustomMetaBox()
