@@ -72,6 +72,7 @@ class Core
         $this->enableMediaReplaceDisableOption();
         $this->advancedCustomFieldsRemoveEditorsOnAllPages();
         $this->advancedCustomFieldsReenableCustomMetaBox();
+        $this->advancedCustomFieldsReduceWysiwygHeight();
         $this->webPConverterAndCropThumbnailsFixPluginConflict();
         $this->autoClearCacheForWpFastestCache();
         $this->cropThumbnailsOnlyShowNeededSize();
@@ -872,6 +873,36 @@ $rand
             remove_post_type_support('post', 'editor');
             remove_post_type_support('page', 'editor');
         });
+    }
+
+    private function advancedCustomFieldsReduceWysiwygHeight()
+    {
+        // reduce wysiwyg editor height
+        add_action('admin_head', function () {
+            ?>
+            <style>
+                .acf-editor-wrap iframe {
+                    min-height:100px;
+                }
+            </style>
+            <?php
+        });
+        add_filter('acf/render_field/type=wysiwyg', [$this, 'preRenderWysiwygField'], 0, 1);
+    }
+
+    public function preRenderWysiwygField()
+    {
+        ob_start();
+        add_filter('acf/render_field/type=wysiwyg', [$this, 'afterRenderWysiwygField'], 20, 1);
+    }
+
+    public function afterRenderWysiwygField()
+    {
+        remove_filter('acf/render_field/type=wysiwyg', [$this, 'afterRenderWysiwygField'], 20, 1);
+        $output = ob_get_contents();
+        $output = str_replace('height:300px;', 'height:100px;', $output);
+        ob_end_clean();
+        echo $output;
     }
 
     private function advancedCustomFieldsReenableCustomMetaBox()
