@@ -947,6 +947,12 @@ $rand
                 }
             });
             </script>
+            <style>
+            /* reduce also height */
+            .acf-relationship .list {
+                height: 100px;
+            }
+            </style>
 	    <?php
         });
     }
