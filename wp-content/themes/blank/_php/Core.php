@@ -76,6 +76,7 @@ class Core
         $this->webPConverterAndCropThumbnailsFixPluginConflict();
         $this->autoClearCacheForWpFastestCache();
         $this->cropThumbnailsOnlyShowNeededSize();
+        $this->cropThumbnailsEnableEverywhere();
         $this->blockListUpdaterModifySpamlist();
         //$this->advancedCustomFieldsAddQuickLinkToRefs();
     }
@@ -731,6 +732,13 @@ $rand
             });
             </script>
             <?php
+        });
+    }
+
+    private function cropThumbnailsEnableEverywhere() {
+        // see https://github.com/vollyimnetz/crop-thumbnails#filter-crop_thumbnails_activat_on_adminpages
+        add_filter('crop_thumbnails_activat_on_adminpages', function($oldValue) {
+            return true;
         });
     }
 
