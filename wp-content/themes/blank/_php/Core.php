@@ -45,6 +45,9 @@ class Core
         //$this->loadCssAdvanced();
         //$this->loadCssBasic();
 
+        /* cache busting */
+        $this->enableCacheBusting();
+
         /* media */
         $this->addBasicImageSizes();
         $this->preventResizeOfBigImages();
@@ -56,7 +59,6 @@ class Core
         /* security */
         $this->disableUserSniffing();
         $this->blockSubscribersFromAdmin();
-        $this->removeAutoVersionFromScripts();
         $this->removeWordPressVersionInHead();
 
         /* performance */
@@ -774,32 +776,37 @@ $rand
         remove_filter('acf_the_content', 'wpautop');
     }
 
-    private function removeAutoVersionFromScripts()
+    private function enableCacheBusting()
     {
         add_filter(
             'style_loader_src',
             function ($src) {
-                return $this->removeAutoVersionFromScriptsFn($src);
+                return $this->enableCacheBustingFn($src);
             },
             9999
         );
         add_filter(
             'script_loader_src',
             function ($src) {
-                return $this->removeAutoVersionFromScriptsFn($src);
+                return $this->enableCacheBustingFn($src);
             },
             9999
         );
     }
 
-    private function removeAutoVersionFromScriptsFn($src)
+    private function enableCacheBustingFn($src)
     {
+        // remove wordpress version
         if (strpos($src, 'ver=')) {
             $src = remove_query_arg('ver', $src);
         }
-        // reload on every request on localhost
+        // enable cache busting on dev on every reload
         if (!self::isProduction()) {
             $src = add_query_arg('ver', mt_rand(1000, 9999), $src);
+        }
+        // enable cache busting on production on file change
+        if (self::isProduction()) {
+            $src = add_query_arg('ver', filemtime(str_replace(get_template_directory_uri(), get_template_directory(), $src)), $src);
         }
         return $src;
     }
