@@ -23,7 +23,6 @@ class Core
         $this->sendMailsNotOnProductionToDeveloper();
         $this->removePrivacyPolicyLinkFromLogin();
         $this->resetWordPressLoginFormLayout();
-        $this->hideToolbarInFrontend();
         $this->addThemeSupportForBasicFeatures();
         $this->enableCustomEditorStyle();
         $this->disableBackendLanguageSwitcher();
@@ -33,6 +32,10 @@ class Core
         $this->disableWelcomeEmailsOnMultisiteRegistrations();
         //$this->disableFrontendBackendOnTesting();
         //$this->disableAutoQuoteConversion();
+
+        /* adminbar */        
+        //$this->hideAdminbarInFrontend();
+        $this->showAdminbarInFrontendOnHover();
 
         /* js */
         $this->loadJsBasicWithLocalize();
@@ -402,9 +405,23 @@ $rand
         });
     }
 
-    private function hideToolbarInFrontend()
+    private function hideAdminbarInFrontend()
     {
         add_filter('show_admin_bar', '__return_false');
+    }
+
+    private function showAdminbarInFrontendOnHover() {
+        // remove margin top from html
+        add_theme_support('admin-bar', ['callback' => '__return_false']);
+        // add styles
+        add_action('wp_head', function () {
+            ?>
+            <style>
+            #wpadminbar { opacity: 0; transition: opacity 0.25s ease-in-out; }
+            #wpadminbar:hover { opacity: 1; }
+            </style>
+            <?php
+        });
     }
 
     private function preventResizeOfBigImages()
