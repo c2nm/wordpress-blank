@@ -970,11 +970,11 @@ $rand
             specs = specs.substring(0, specs.length-1);
             window.specs = specs;
             document.addEventListener('DOMContentLoaded', () => {
-                if( document.querySelector('.acf-field-relationship') !== null ) {
-                    document.querySelectorAll('.acf-field-relationship').forEach($el => {
+                if( document.querySelector('.acf-field-relationship, .acf-th[data-type="relationship"]') !== null ) {
+                    document.querySelectorAll('.acf-field-relationship, .acf-th[data-type="relationship"]').forEach($el => {
                         if( $el.getAttribute('data-name') in refs ) {
-                            $el.querySelector('.acf-label').insertAdjacentHTML('beforeend',`
-                                <a href="#" onclick="window.open('<?php echo get_bloginfo(
+                            $el.querySelector('label').insertAdjacentHTML('beforeend',`
+                                <br/><a href="#" onclick="window.open('<?php echo get_bloginfo(
                                     'url'
                                 ); ?>/wp-admin/post-new.php?post_type=${refs[$el.getAttribute('data-name')]}','_blank',window.specs);return false;">Neues Element hinzufügen</a>
                             `);
