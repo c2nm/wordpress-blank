@@ -910,16 +910,6 @@ $rand
 
     private function advancedCustomFieldsReduceWysiwygHeight()
     {
-        // reduce wysiwyg editor height
-        add_action('admin_head', function () {
-            ?>
-            <style>
-                .acf-editor-wrap iframe {
-                    min-height:100px;
-                }
-            </style>
-            <?php
-        });
         add_filter('acf/render_field/type=wysiwyg', [$this, 'preRenderWysiwygField'], 0, 1);
     }
 
@@ -929,11 +919,25 @@ $rand
         add_filter('acf/render_field/type=wysiwyg', [$this, 'afterRenderWysiwygField'], 20, 1);
     }
 
-    public function afterRenderWysiwygField()
+    public function afterRenderWysiwygField($field)
     {
+        // it is set to a default value but can be modified
+        // via php acf_add_local_field_group by setting
+        // 'height' => xx, 'no_menubar' => 1
+        $height = 120;
         remove_filter('acf/render_field/type=wysiwyg', [$this, 'afterRenderWysiwygField'], 20, 1);
         $output = ob_get_contents();
-        $output = str_replace('height:300px;', 'height:100px;', $output);
+        if( @$field['height'] != '' ) {
+            $height = $field['height'];
+        }
+        $output = str_replace('height:300px;', 'height:'.$height.'px;', $output);
+        $output = '<style>[data-key="'.$field['key'].'"] iframe { min-height:'.$height.'px; }[data-key="'.$field['key'].'"]</style>'.$output;
+        if( $height < 100 ) {
+            $output = '<style>[data-key="'.$field['key'].'"] iframe[style*="height: 100px"] { height:'.$height.'px !important; }</style>'.$output;
+        }
+        if( @$field['no_menubar'] == '1' ) {
+            $output = '<style>[data-key="'.$field['key'].'"] .mce-menubar { display:none; }</style>'.$output;
+        }
         ob_end_clean();
         echo $output;
     }
