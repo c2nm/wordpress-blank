@@ -54,6 +54,7 @@ class Core
         /* media */
         $this->addBasicImageSizes();
         $this->preventResizeOfBigImages();
+        $this->backendSearchInAltTags();
         //$this->forceUseOfImageMagick();
         //$this->disableStripExifIptcFromImages();
         //$this->increaseImageQualityOfResizedImages();
@@ -428,6 +429,34 @@ $rand
     {
         // >2k (wp >= 5.3 by default creates -scaled versions when higher)
         add_filter('big_image_size_threshold', '__return_false');
+    }
+
+    private function backendSearchInAltTags()
+    {
+        add_filter(
+            'posts_clauses',
+            function ($pieces) {
+                global $wp_query, $wpdb;
+                $vars = $wp_query->query_vars;
+                if (empty($vars)) { $vars = isset($_REQUEST['query']) ? $_REQUEST['query'] : []; }
+                if (
+                    !empty($vars['s']) &&
+                    ((isset($_REQUEST['action']) && $_REQUEST['action'] == 'query-attachments') || $vars['post_type'] == 'attachment')
+                ) {
+                    $pieces['where'] = str_replace(
+                        "$wpdb->posts.post_title LIKE",
+                        $wpdb->prepare(
+                            "(pm.meta_key IN ('_wp_attachment_image_alt') AND pm.meta_value LIKE %s) OR $wpdb->posts.post_title LIKE",
+                            '%' . $wpdb->esc_like($vars['s']) . '%'
+                        ),
+                        $pieces['where']
+                    );
+                    $pieces['join'] .= " LEFT JOIN $wpdb->postmeta AS pm ON $wpdb->posts.ID = pm.post_id";
+                }
+                return $pieces;
+            },
+            0
+        );
     }
 
     private function increaseImageQualityOfResizedImages()
