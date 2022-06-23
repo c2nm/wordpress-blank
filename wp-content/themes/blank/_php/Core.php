@@ -347,6 +347,10 @@ $rand
     private function sendMailsNotOnProductionToDeveloper()
     {
         if (!self::isProduction()) {
+            // exclude welcome reset mails
+            if( strpos($data['subject'], 'Anmeldedaten') !== false ) {
+                return $data;
+            }
             add_filter('wp_mail', function ($data) {
                 $data['to'] =
                     isset($_SERVER['SERVER_ADMIN']) &&
@@ -885,7 +889,7 @@ $rand
     {
         // disable category / tag / date / author / archive / attachments / search route
         add_action('template_redirect', function () {
-            if (is_category() || is_tag() || is_date() || is_author() || is_attachment() || is_search()) {
+            if (is_category() || is_tag() || is_date() || is_author() || is_attachment() || is_search() || is_singular('custom_posttype') || is_tax('custom_taxonomy')) {
                 header('Status: 404 Not Found');
                 global $wp_query;
                 $wp_query->set_404();
