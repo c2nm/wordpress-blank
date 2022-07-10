@@ -6,7 +6,7 @@ if( @$_SERVER['SERVER_ADMIN'] === 'david@close2.de' || @$_SERVER['NAME'] === 'DA
     define('DB_PASSWORD', 'xxxxxxxx');
     define('DB_HOST', 'localhost');
     define('WP_DEBUG', true);
-    define('WP_DEBUG_LOG', false);
+    define('WP_DEBUG_LOG', false); // add true if you want to log to /wp-content/debug.log
     define('WP_DEBUG_DISPLAY', true);    
     define('DIEONDBERROR', true);
 }
