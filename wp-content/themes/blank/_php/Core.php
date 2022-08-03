@@ -17,7 +17,7 @@ class Core
         $this->enableSvgUpload();
         $this->removeAllDashboardWidgets();
         $this->detectPageSpeedInsights();
-        $this->removeBulkHeaderLinks();
+        $this->removeBulkHeaderLinksAndOembed();
         $this->alwaysEnableShowHiddenCharactersInTinyMce();
         $this->disableEmailBugAlerts();
         $this->sendMailsNotOnProductionToDeveloper();
@@ -33,7 +33,7 @@ class Core
         //$this->disableFrontendBackendOnTesting();
         //$this->disableAutoQuoteConversion();
 
-        /* adminbar */        
+        /* adminbar */
         //$this->hideAdminbarInFrontend();
         $this->showAdminbarInFrontendOnHover();
 
@@ -311,10 +311,13 @@ $rand
         add_filter('login_display_language_dropdown', '__return_false');
     }
 
-    private function removeBulkHeaderLinks()
+    private function removeBulkHeaderLinksAndOembed()
     {
         // remove oembed links in header (ryte gives otherwise errors)
         remove_action('wp_head', 'wp_oembed_add_discovery_links', 10);
+        // remove the rest api endpoint.
+        remove_action('rest_api_init', 'wp_oembed_register_route');
+
         // remove wp-json rest api links in header (ryte gives otherwise errors)
         remove_action('wp_head', 'rest_output_link_wp_head', 10);
         // remove windows live writer manifest in header
@@ -349,7 +352,7 @@ $rand
         if (!self::isProduction()) {
             add_filter('wp_mail', function ($data) {
                 // exclude welcome reset mails
-                if( strpos($data['subject'], 'Anmeldedaten') !== false ) {
+                if (strpos($data['subject'], 'Anmeldedaten') !== false) {
                     return $data;
                 }
                 $data['to'] =
@@ -415,7 +418,8 @@ $rand
         add_filter('show_admin_bar', '__return_false');
     }
 
-    private function showAdminbarInFrontendOnHover() {
+    private function showAdminbarInFrontendOnHover()
+    {
         // remove margin top from html
         add_theme_support('admin-bar', ['callback' => '__return_false']);
         // add styles
@@ -442,10 +446,13 @@ $rand
             function ($pieces) {
                 global $wp_query, $wpdb;
                 $vars = $wp_query->query_vars;
-                if (empty($vars)) { $vars = isset($_REQUEST['query']) ? $_REQUEST['query'] : []; }
+                if (empty($vars)) {
+                    $vars = isset($_REQUEST['query']) ? $_REQUEST['query'] : [];
+                }
                 if (
                     !empty($vars['s']) &&
-                    ((isset($_REQUEST['action']) && $_REQUEST['action'] == 'query-attachments') || $vars['post_type'] == 'attachment')
+                    ((isset($_REQUEST['action']) && $_REQUEST['action'] == 'query-attachments') ||
+                        $vars['post_type'] == 'attachment')
                 ) {
                     $pieces['where'] = str_replace(
                         "$wpdb->posts.post_title LIKE",
@@ -787,9 +794,10 @@ $rand
         });
     }
 
-    private function cropThumbnailsEnableEverywhere() {
+    private function cropThumbnailsEnableEverywhere()
+    {
         // see https://github.com/vollyimnetz/crop-thumbnails#filter-crop_thumbnails_activat_on_adminpages
-        add_filter('crop_thumbnails_activat_on_adminpages', function($oldValue) {
+        add_filter('crop_thumbnails_activat_on_adminpages', function ($oldValue) {
             return true;
         });
     }
@@ -856,7 +864,11 @@ $rand
         }
         // enable cache busting on production on file change
         if (self::isProduction()) {
-            $src = add_query_arg('ver', filemtime(str_replace(get_template_directory_uri(), get_template_directory(), $src)), $src);
+            $src = add_query_arg(
+                'ver',
+                filemtime(str_replace(get_template_directory_uri(), get_template_directory(), $src)),
+                $src
+            );
         }
         return $src;
     }
@@ -889,7 +901,16 @@ $rand
     {
         // disable category / tag / date / author / archive / attachments / search route
         add_action('template_redirect', function () {
-            if (is_category() || is_tag() || is_date() || is_author() || is_attachment() || is_search() || is_singular('custom_posttype') || is_tax('custom_taxonomy')) {
+            if (
+                is_category() ||
+                is_tag() ||
+                is_date() ||
+                is_author() ||
+                is_attachment() ||
+                is_search() ||
+                is_singular('custom_posttype') ||
+                is_tax('custom_taxonomy')
+            ) {
                 header('Status: 404 Not Found');
                 global $wp_query;
                 $wp_query->set_404();
@@ -960,16 +981,30 @@ $rand
         $height = 120;
         remove_filter('acf/render_field/type=wysiwyg', [$this, 'afterRenderWysiwygField'], 20, 1);
         $output = ob_get_contents();
-        if( @$field['height'] != '' ) {
+        if (@$field['height'] != '') {
             $height = $field['height'];
         }
-        $output = str_replace('height:300px;', 'height:'.$height.'px;', $output);
-        $output = '<style>[data-key="'.$field['key'].'"] iframe { min-height:'.$height.'px; }[data-key="'.$field['key'].'"]</style>'.$output;
-        if( $height < 100 ) {
-            $output = '<style>[data-key="'.$field['key'].'"] iframe[style*="height: 100px"] { height:'.$height.'px !important; }</style>'.$output;
+        $output = str_replace('height:300px;', 'height:' . $height . 'px;', $output);
+        $output =
+            '<style>[data-key="' .
+            $field['key'] .
+            '"] iframe { min-height:' .
+            $height .
+            'px; }[data-key="' .
+            $field['key'] .
+            '"]</style>' .
+            $output;
+        if ($height < 100) {
+            $output =
+                '<style>[data-key="' .
+                $field['key'] .
+                '"] iframe[style*="height: 100px"] { height:' .
+                $height .
+                'px !important; }</style>' .
+                $output;
         }
-        if( @$field['no_menubar'] == '1' ) {
-            $output = '<style>[data-key="'.$field['key'].'"] .mce-menubar { display:none; }</style>'.$output;
+        if (@$field['no_menubar'] == '1') {
+            $output = '<style>[data-key="' . $field['key'] . '"] .mce-menubar { display:none; }</style>' . $output;
         }
         ob_end_clean();
         echo $output;
@@ -1081,6 +1116,15 @@ $rand
             },
             10,
             2
+        );
+        // force reconversion after crop
+        add_action(
+            'crop_thumbnails_after_save_new_thumb',
+            function ($full_path) {
+                do_action('webpc_convert_paths', [$full_path]);
+            },
+            10,
+            1
         );
     }
 
