@@ -84,6 +84,7 @@ class Core
         $this->cropThumbnailsOnlyShowNeededSize();
         $this->cropThumbnailsEnableEverywhere();
         $this->blockListUpdaterModifySpamlist();
+        $this->allowEditorsToAddHTMLToTextareaFields();
         //$this->advancedCustomFieldsAddQuickLinkToRefs();
     }
 
@@ -293,6 +294,21 @@ $rand
                 return $input;
             },
             PHP_INT_MAX
+        );
+    }
+
+    private function allowEditorsToAddHTMLToTextareaFields() {
+        // see https://www.advancedcustomfields.com/resources/html-escaping/ / https://kellenmace.com/add-unfiltered_html-capability-to-admins-or-editors-in-wordpress-multisite/
+        add_filter(
+            'map_meta_cap',
+            function ($caps, $cap, $user_id) {
+                if ('unfiltered_html' === $cap && user_can($user_id, 'editor')) {
+                    $caps = ['unfiltered_html'];
+                }
+                return $caps;
+            },
+            1,
+            3
         );
     }
 
