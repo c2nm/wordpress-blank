@@ -114,7 +114,10 @@ class Core
             1,
             true
         );
-        */
+        */        
+        if ($image == '' || empty($image)) {
+            return;
+        }
         echo '<picture>';
         for (
             $i = floor(self::getCommonScreenResolutions()[0] / 100) * 100;
@@ -369,6 +372,10 @@ $rand
             add_filter('wp_mail', function ($data) {
                 // exclude welcome reset mails
                 if (strpos($data['subject'], 'Anmeldedaten') !== false) {
+                    return $data;
+                }
+                // exclude specific email
+                if( @$data['to'] === 'i-want-to-test@tld.com' ) {
                     return $data;
                 }
                 $data['to'] =
