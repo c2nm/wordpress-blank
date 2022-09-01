@@ -34,6 +34,10 @@ else
     // increase security on production and force httponly and secure on all php session cookies
     ini_set('session.cookie_httponly', 1);
     ini_set('session.cookie_secure', 1);
+    // configure sentry.io php/js error monitoring plugin
+    define( 'WP_SENTRY_PHP_DSN', 'https://********************************@********.ingest.sentry.io/*******' );
+    define( 'WP_SENTRY_BROWSER_DSN', 'https://********************************@********.ingest.sentry.io/*******' );
+    define( 'WP_SENTRY_ENV', str_replace('www.','',$_SERVER['HTTP_HOST']) );
 }
 
 define('DB_CHARSET', 'utf8mb4');
