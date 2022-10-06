@@ -778,6 +778,7 @@ $rand
             add_image_size('300x300', 300, 300, true);
             add_image_size('400x500', 400, 500, true);
             add_image_size('400x800', 400, 800, true);
+            add_image_size('600x', 600, 9999, false); // no crop example
         });
     }
 
@@ -1126,7 +1127,9 @@ $rand
 
     private function webPConverterAndCropThumbnailsFixPluginConflict()
     {
-        // plugin "WebP Converter for Media": serve original image instead of webp-version for "Crop Featured Image" because webp-conversion is not yet ready at time of request
+        // (!!)attention: you manually have to save in the webp converter settings to get this applied(!!)
+        // plugin "WebP Converter for Media": serve original image instead of webp-version for "Crop Featured Image"
+        // because webp-conversion is not yet ready at time of request
         add_filter(
             'webpc_htaccess_mod_rewrite',
             function ($rules, $path) {
