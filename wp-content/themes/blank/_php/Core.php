@@ -795,7 +795,7 @@ $rand
                             let t1 = setInterval(() => {
                                 if( opened === false && document.querySelector('.media-modal-content') !== null ) {
                                     opened = true;
-                                    localStorage.setItem('cpt_same_ratio_mode','group');
+                                    localStorage.setItem('cpt_same_ratio_mode','select');
                                     document.head.insertAdjacentHTML('beforeend',`<style class="hide-crop-images">
                                         .cptImageSizelist li:not(.cptImageSize-${size}) { display:none !important; }
                                     </style>`);
