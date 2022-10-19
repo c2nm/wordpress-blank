@@ -1,0 +1,195 @@
+<?php
+namespace WP;
+
+/**
+ * ImageHelper
+ *
+ * This generates multiple smaller versions of (already defined)
+ * cropped and non-cropped versions and provides a simple
+ * helper function to output images (in a <picture>-tag).
+ *
+ * @author David Vielhuber <david@close2.de>
+ * @version 1.0.1
+ */
+class ImageHelper
+{
+    public static $init = false;
+
+    public $breakpoints = [768];
+    // use this if the page has 3 layouts (mobile, tablet, desktop)
+    //public $breakpoints = [768, 1024];
+
+    public $resolutions = [360, 375, 414, 768, 1024, 1280, 1366, 1440, 1536, 1600, 1680, 1920];
+    // use this for 4k support
+    //public $resolutions =  [360, 375, 414, 768, 1024, 1280, 1366, 1440, 1536, 1600, 1680, 1920, 2048, 2560, 4096];
+
+    public function __construct()
+    {
+        if (ImageHelper::$init === false) {
+            ImageHelper::$init = true;
+            $this->addVariousImageSizesForRenderHelper();
+        }
+    }
+
+    public static function img(...$args)
+    {
+        /* example call inside template:
+        \WP\ImageHelper::img(
+            get_field('image', 2),
+            'test-class',
+            [0.5, 1],
+            '1900x1200',
+            ['data-foo' => 'bar', 'alt' => 'specific alt tag'],
+            true
+        );
+        */
+        $obj = new ImageHelper();
+        $obj->renderImage(...$args);
+    }
+
+    public function renderImage($image, $class = null, $ratios = [1, 1, 1], $cropped = null, $attrs = [], $lazy = true)
+    {
+        if ($image == '' || empty($image)) {
+            return;
+        }
+
+        echo '<picture>';
+        $default_size = null;
+        foreach ($this->resolutions as $resolutions__value) {
+            $ratio = $ratios[count($ratios) - 1];
+            foreach (array_reverse($this->breakpoints) as $breakpoints__key => $breakpoints__value) {
+                if ($resolutions__value > $breakpoints__value) {
+                    $ratio = $ratios[$breakpoints__key];
+                    break;
+                }
+            }
+
+            $size = null;
+            foreach (array_reverse($this->resolutions) as $resolutions_reversed__value) {
+                if ($resolutions_reversed__value >= $resolutions__value * $ratio) {
+                    $size = $resolutions_reversed__value;
+                }
+            }
+            $default_size = $size;
+            echo '<source media="(max-width: ' . $resolutions__value . 'px)"';
+            // debug
+            if (is_user_logged_in()) {
+                echo ' data-name="' . $this->getSizeName($size, $cropped) . '"';
+                echo ' data-ratio="' . $ratio . '"';
+            }
+            echo ' srcset="' . $image['sizes'][$this->getSizeName($size, $cropped)] . '">';
+        }
+
+        $img_attrs = [];
+        if ($class !== null) {
+            $img_attrs['class'] = $class;
+        }
+        if ($lazy === true) {
+            $img_attrs['loading'] = 'lazy';
+        }
+        $img_attrs['width'] = $image['sizes'][$this->getSizeName($default_size, $cropped) . '-width'];
+        $img_attrs['height'] = $image['sizes'][$this->getSizeName($default_size, $cropped) . '-height'];
+        $img_attrs['src'] = $image['sizes'][$this->getSizeName($default_size, $cropped)];
+        $img_attrs['alt'] = htmlspecialchars($image['alt']);
+        foreach ($attrs as $attrs__key => $attrs__value) {
+            $img_attrs[$attrs__key] = htmlspecialchars($attrs__value);
+        }
+
+        echo '<img';
+        foreach ($img_attrs as $img_attrs__key => $img_attrs__value) {
+            if ($img_attrs__value === null) {
+                continue;
+            }
+            echo ' ' . $img_attrs__key . '="' . $img_attrs__value . '"';
+        }
+        echo ' />';
+        echo '</picture>';
+    }
+
+    private function getSizeName($size, $cropped)
+    {
+        $size_name = null;
+        if ($cropped === null) {
+            $size_name = 'auto_generated_nocrop_' . $size . 'x';
+        } else {
+            $sizes = wp_get_registered_image_subsizes();
+            if (!isset($sizes[$cropped])) {
+                return null;
+            }
+            $size_name =
+                'auto_generated_crop_' .
+                $size .
+                'x' .
+                round($size / ($sizes[$cropped]['width'] / $sizes[$cropped]['height']));
+        }
+        return $size_name;
+    }
+
+    private function addVariousImageSizesForRenderHelper()
+    {
+        // no crop
+        add_action(
+            'after_setup_theme',
+            function () {
+                foreach ($this->resolutions as $resolutions__value) {
+                    add_image_size('auto_generated_nocrop_' . $resolutions__value . 'x', $resolutions__value, 0, false);
+                }
+            },
+            PHP_INT_MAX
+        );
+        // cropped pendants
+        add_action(
+            'after_setup_theme',
+            function () {
+                $sizes = wp_get_registered_image_subsizes();
+                foreach ($sizes as $sizes__value) {
+                    if ($sizes__value['crop'] != '1') {
+                        continue;
+                    }
+                    $ratio = $sizes__value['width'] / $sizes__value['height'];
+                    $ratio_string = $this->floatToRatio($sizes__value['width'] / $sizes__value['height']);
+                    foreach ($this->resolutions as $resolutions__value) {
+                        $height = round($resolutions__value / $ratio);
+                        $name = 'auto_generated_crop_' . $resolutions__value . 'x' . $height;
+                        add_image_size($name, $resolutions__value, $height, true);
+                        // support plugin "crop image" and set correct ratio
+                        add_filter(
+                            'crop_thumbnails_editor_printratio',
+                            function ($printRatio, $imageSizeName) use ($name, $ratio_string) {
+                                if ($imageSizeName === $name) {
+                                    $printRatio = $ratio_string;
+                                }
+                                return $printRatio;
+                            },
+                            10,
+                            2
+                        );
+                    }
+                }
+            },
+            PHP_INT_MAX
+        );
+    }
+
+    private function floatToRatio($n)
+    {
+        $tolerance = 1e-6;
+        $h1 = 1;
+        $h2 = 0;
+        $k1 = 0;
+        $k2 = 1;
+        $b = 1 / $n;
+        do {
+            $b = 1 / $b;
+            $a = floor($b);
+            $aux = $h1;
+            $h1 = $a * $h1 + $h2;
+            $h2 = $aux;
+            $aux = $k1;
+            $k1 = $a * $k1 + $k2;
+            $k2 = $aux;
+            $b = $b - $a;
+        } while (abs($n - $h1 / $k1) > $n * $tolerance);
+        return "$h1:$k1";
+    }
+}

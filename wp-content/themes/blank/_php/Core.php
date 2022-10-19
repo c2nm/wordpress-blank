@@ -58,7 +58,6 @@ class Core
         //$this->forceUseOfImageMagick();
         //$this->disableStripExifIptcFromImages();
         //$this->increaseImageQualityOfResizedImages();
-        //$this->addVariousImageSizesForRenderHelper();
 
         /* security */
         $this->disableUserSniffing();
@@ -95,82 +94,6 @@ class Core
         return strpos($_SERVER['HTTP_HOST'], '.local') === false &&
             strpos($_SERVER['HTTP_HOST'], 'close2dev') === false &&
             strpos($_SERVER['HTTP_HOST'], '192.168.178') === false;
-    }
-
-    public static function renderImage(
-        $image,
-        $class = null,
-        $ratio_large = 1,
-        $ratio_medium = 1,
-        $ratio_small = 1,
-        $lazy = true
-    ) {
-        /* example call inside template:
-        echo \WP\Core::renderImage(
-            get_field('image', 2),
-            'test-class',
-            1,
-            1,
-            1,
-            true
-        );
-        */        
-        if ($image == '' || empty($image)) {
-            return;
-        }
-        echo '<picture>';
-        for (
-            $i = floor(self::getCommonScreenResolutions()[0] / 100) * 100;
-            $i <= ceil(array_reverse(self::getCommonScreenResolutions())[0] / 100) * 100;
-            $i = $i + 200
-        ) {
-            $size = null;
-            if ($i >= self::getMediaBreakpoints()[1]) {
-                $ratio = $ratio_large;
-            } elseif ($i >= self::getMediaBreakpoints()[0]) {
-                $ratio = $ratio_medium;
-            } else {
-                $ratio = $ratio_small;
-            }
-            foreach (array_reverse(self::getCommonScreenResolutions()) as $resolutions__value) {
-                if ($resolutions__value >= $i * $ratio) {
-                    $size = $resolutions__value;
-                }
-            }
-            echo '<source media="(max-width: ' .
-                $i .
-                'px)" srcset="' .
-                $image['sizes'][$size . 'x'] .
-                '" data-size="' .
-                $size .
-                'x' .
-                '">';
-        }
-        $default_size = null;
-        foreach (self::getCommonScreenResolutions() as $resolutions__value) {
-            if ($resolutions__value <= self::getMediaBreakpoints()[0]) {
-                $default_size = $resolutions__value;
-            } else {
-                break;
-            }
-        }
-        echo '<img' .
-            ($class !== null ? ' class="' . $class . '"' : '') .
-            ($lazy === true ? ' loading="lazy"' : '') .
-            ' width="' .
-            $image['sizes'][$default_size . 'x-width'] .
-            '"' .
-            ' height="' .
-            $image['sizes'][$default_size . 'x-height'] .
-            '"' .
-            ' src="' .
-            $image['url'] .
-            '"' .
-            ' alt="' .
-            $image['alt'] .
-            '"' .
-            ' />';
-        echo '</picture>';
     }
 
     public static function asciiArt()
@@ -745,30 +668,6 @@ $rand
         ]);
     }
 
-    private function addVariousImageSizesForRenderHelper()
-    {
-        // add more thumbnail sizes
-        // besides default ones:
-        // - "thumbnail": 150x150
-        // - "medium": 300x300
-        // - "large": 1024x1024
-        add_action('after_setup_theme', function () {
-            foreach ($this->getCommonScreenResolutions() as $resolutions__value) {
-                add_image_size($resolutions__value . 'x', $resolutions__value, 0, false);
-            }
-        });
-    }
-
-    private function getMediaBreakpoints()
-    {
-        return [768, 1024];
-    }
-
-    private function getCommonScreenResolutions()
-    {
-        return [360, 375, 414, 768, 1024, 1280, 1366, 1440, 1536, 1600, 1680, 1920, 2048, 2560, 4096];
-    }
-
     private function addBasicImageSizes()
     {
         // add cropped image sizes
@@ -776,6 +675,7 @@ $rand
             add_image_size('300x300', 300, 300, true);
             add_image_size('400x500', 400, 500, true);
             add_image_size('400x800', 400, 800, true);
+            add_image_size('1600x1200', 1600, 1200, true);
             add_image_size('600x', 600, 9999, false); // no crop example
         });
     }
