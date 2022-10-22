@@ -9,24 +9,22 @@ namespace WP;
  * helper function to output images (in a <picture>-tag).
  *
  * @author David Vielhuber <david@close2.de>
- * @version 1.0.1
+ * @version 1.0.3
  */
 class ImageHelper
 {
     public static $init = false;
 
-    public $breakpoints = [768];
-    // use this if the page has 3 layouts (mobile, tablet, desktop)
-    //public $breakpoints = [768, 1024];
+    public static $breakpoints = null;
 
-    public $resolutions = [360, 375, 414, 768, 1024, 1280, 1366, 1440, 1536, 1600, 1680, 1920];
-    // use this for 4k support
-    //public $resolutions =  [360, 375, 414, 768, 1024, 1280, 1366, 1440, 1536, 1600, 1680, 1920, 2048, 2560, 4096];
+    public static $resolutions = null;
 
-    public function __construct()
+    public function __construct($resolutions = null, $breakpoints = null)
     {
         if (ImageHelper::$init === false) {
             ImageHelper::$init = true;
+            ImageHelper::$resolutions = $resolutions;
+            ImageHelper::$breakpoints = $breakpoints;
             $this->addVariousImageSizesForRenderHelper();
         }
     }
@@ -53,31 +51,35 @@ class ImageHelper
             return;
         }
 
-        echo '<picture>';
-        $default_size = null;
-        foreach ($this->resolutions as $resolutions__value) {
-            $ratio = $ratios[count($ratios) - 1];
-            foreach (array_reverse($this->breakpoints) as $breakpoints__key => $breakpoints__value) {
-                if ($resolutions__value > $breakpoints__value) {
-                    $ratio = $ratios[$breakpoints__key];
-                    break;
-                }
-            }
+        $is_pixel = isset($image['mime_type']) && in_array(@$image['mime_type'], ['image/jpeg', 'image/png']);
 
-            $size = null;
-            foreach (array_reverse($this->resolutions) as $resolutions_reversed__value) {
-                if ($resolutions_reversed__value >= $resolutions__value * $ratio) {
-                    $size = $resolutions_reversed__value;
+        if ($is_pixel) {
+            echo '<picture>';
+            $default_size = null;
+            foreach (ImageHelper::$resolutions as $resolutions__value) {
+                $ratio = $ratios[count($ratios) - 1];
+                foreach (array_reverse(ImageHelper::$breakpoints) as $breakpoints__key => $breakpoints__value) {
+                    if ($resolutions__value > $breakpoints__value) {
+                        $ratio = $ratios[$breakpoints__key];
+                        break;
+                    }
                 }
+
+                $size = null;
+                foreach (array_reverse(ImageHelper::$resolutions) as $resolutions_reversed__value) {
+                    if ($resolutions_reversed__value >= $resolutions__value * $ratio) {
+                        $size = $resolutions_reversed__value;
+                    }
+                }
+                $default_size = $size;
+                echo '<source media="(max-width: ' . $resolutions__value . 'px)"';
+                // debug
+                if (is_user_logged_in()) {
+                    echo ' data-name="' . $this->getSizeName($size, $cropped) . '"';
+                    echo ' data-ratio="' . $ratio . '"';
+                }
+                echo ' srcset="' . $image['sizes'][$this->getSizeName($size, $cropped)] . '">';
             }
-            $default_size = $size;
-            echo '<source media="(max-width: ' . $resolutions__value . 'px)"';
-            // debug
-            if (is_user_logged_in()) {
-                echo ' data-name="' . $this->getSizeName($size, $cropped) . '"';
-                echo ' data-ratio="' . $ratio . '"';
-            }
-            echo ' srcset="' . $image['sizes'][$this->getSizeName($size, $cropped)] . '">';
         }
 
         $img_attrs = [];
@@ -87,10 +89,16 @@ class ImageHelper
         if ($lazy === true) {
             $img_attrs['loading'] = 'lazy';
         }
-        $img_attrs['width'] = $image['sizes'][$this->getSizeName($default_size, $cropped) . '-width'];
-        $img_attrs['height'] = $image['sizes'][$this->getSizeName($default_size, $cropped) . '-height'];
-        $img_attrs['src'] = $image['sizes'][$this->getSizeName($default_size, $cropped)];
         $img_attrs['alt'] = htmlspecialchars($image['alt']);
+
+        if ($is_pixel) {
+            $img_attrs['src'] = $image['sizes'][$this->getSizeName($default_size, $cropped)];
+            $img_attrs['width'] = $image['sizes'][$this->getSizeName($default_size, $cropped) . '-width'];
+            $img_attrs['height'] = $image['sizes'][$this->getSizeName($default_size, $cropped) . '-height'];
+        } else {
+            $img_attrs['src'] = $image['url'];
+        }
+
         foreach ($attrs as $attrs__key => $attrs__value) {
             $img_attrs[$attrs__key] = htmlspecialchars($attrs__value);
         }
@@ -131,7 +139,7 @@ class ImageHelper
         add_action(
             'after_setup_theme',
             function () {
-                foreach ($this->resolutions as $resolutions__value) {
+                foreach (ImageHelper::$resolutions as $resolutions__value) {
                     add_image_size('auto_generated_nocrop_' . $resolutions__value . 'x', $resolutions__value, 0, false);
                 }
             },
@@ -148,7 +156,7 @@ class ImageHelper
                     }
                     $ratio = $sizes__value['width'] / $sizes__value['height'];
                     $ratio_string = $this->floatToRatio($sizes__value['width'] / $sizes__value['height']);
-                    foreach ($this->resolutions as $resolutions__value) {
+                    foreach (ImageHelper::$resolutions as $resolutions__value) {
                         $height = round($resolutions__value / $ratio);
                         $name = 'auto_generated_crop_' . $resolutions__value . 'x' . $height;
                         add_image_size($name, $resolutions__value, $height, true);
