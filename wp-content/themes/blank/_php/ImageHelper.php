@@ -9,7 +9,7 @@ namespace WP;
  * helper function to output images (in a <picture>-tag).
  *
  * @author David Vielhuber <david@close2.de>
- * @version 1.0.3
+ * @version 1.0.4
  */
 class ImageHelper
 {
@@ -65,20 +65,29 @@ class ImageHelper
                     }
                 }
 
-                $size = null;
+                $size = array_reverse(ImageHelper::$resolutions)[0];
+                $size_2x = array_reverse(ImageHelper::$resolutions)[0];
                 foreach (array_reverse(ImageHelper::$resolutions) as $resolutions_reversed__value) {
                     if ($resolutions_reversed__value >= $resolutions__value * $ratio) {
                         $size = $resolutions_reversed__value;
+                    }
+                    if ($resolutions_reversed__value >= 2 * $resolutions__value * $ratio) {
+                        $size_2x = $resolutions_reversed__value;
                     }
                 }
                 $default_size = $size;
                 echo '<source media="(max-width: ' . $resolutions__value . 'px)"';
                 // debug
                 if (is_user_logged_in()) {
-                    echo ' data-name="' . $this->getSizeName($size, $cropped) . '"';
+                    echo ' data-name-1x="' . $this->getSizeName($size, $cropped) . '"';
+                    echo ' data-name-2x="' . $this->getSizeName($size_2x, $cropped) . '"';
                     echo ' data-ratio="' . $ratio . '"';
                 }
-                echo ' srcset="' . $image['sizes'][$this->getSizeName($size, $cropped)] . '">';
+                echo ' srcset="' .
+                    $image['sizes'][$this->getSizeName($size, $cropped)] .
+                    ' 1x, ' .
+                    $image['sizes'][$this->getSizeName($size_2x, $cropped)] .
+                    ' 2x">';
             }
         }
 
