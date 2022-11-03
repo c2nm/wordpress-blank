@@ -963,11 +963,12 @@ $rand
             document.addEventListener('DOMContentLoaded', () => {
                 if( document.querySelector('.acf-field-relationship, .acf-th[data-type="relationship"]') !== null ) {
                     document.querySelectorAll('.acf-field-relationship, .acf-th[data-type="relationship"]').forEach($el => {
-                        if( $el.getAttribute('data-name') in refs ) {
-                            $el.querySelector('label').insertAdjacentHTML('beforeend',`
+                        let name = $el.closest('.acf-field[data-name]').getAttribute('data-name');
+                        if (name in refs) {
+                            $el.querySelector('label').insertAdjacentHTML('beforeend', `
                                 <br/><a href="#" onclick="window.open('<?php echo get_bloginfo(
                                     'url'
-                                ); ?>/wp-admin/post-new.php?post_type=${refs[$el.getAttribute('data-name')]}','_blank',window.specs);return false;">Neues Element hinzufügen</a>
+                                ); ?>/wp-admin/post-new.php?post_type=${refs[name]}','_blank',window.specs);return false;">Neues Element hinzufügen</a>
                             `);
                         }
                     });
