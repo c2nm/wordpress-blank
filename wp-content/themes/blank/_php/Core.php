@@ -63,6 +63,7 @@ class Core
         $this->disableUserSniffing();
         $this->blockSubscribersFromAdmin();
         $this->removeWordPressVersionInHead();
+        $this->disableWpCors();
 
         /* performance */
         $this->addAsyncDeferToJsFiles();
@@ -221,7 +222,8 @@ $rand
         );
     }
 
-    private function allowEditorsToAddHTMLToTextareaFields() {
+    private function allowEditorsToAddHTMLToTextareaFields()
+    {
         // see https://www.advancedcustomfields.com/resources/html-escaping/ / https://kellenmace.com/add-unfiltered_html-capability-to-admins-or-editors-in-wordpress-multisite/
         add_filter(
             'map_meta_cap',
@@ -296,7 +298,7 @@ $rand
                     return $data;
                 }
                 // exclude specific email
-                if( @$data['to'] === 'i-want-to-test@tld.com' ) {
+                if (@$data['to'] === 'i-want-to-test@tld.com') {
                     return $data;
                 }
                 $data['to'] =
@@ -870,6 +872,17 @@ $rand
     private function removeWordPressVersionInHead()
     {
         remove_action('wp_head', 'wp_generator');
+    }
+
+    private function disableWpCors()
+    {
+        add_action(
+            'rest_api_init',
+            function () {
+                remove_filter('rest_pre_serve_request', 'rest_send_cors_headers');
+            },
+            15
+        );
     }
 
     private function disableWelcomeEmailsOnMultisiteRegistrations()
