@@ -1,4 +1,11 @@
 {
+    "name": "wordpress/blank",
+    "source": {
+        "reference": "newmaster"
+    },
+    "dist": {
+        "reference": "newmaster"
+    },
     "require": {
         "vielhuber/stringhelper": "^3.8"
     },
