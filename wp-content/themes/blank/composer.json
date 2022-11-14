@@ -1,10 +1,14 @@
 {
     "name": "wordpress/blank",
     "source": {
-        "reference": "newmaster"
+        "reference": "newmaster",
+        "type": "git",
+        "url": "newurl"
     },
     "dist": {
-        "reference": "newmaster"
+        "reference": "newmaster",
+        "type": "git",
+        "url": "newurl"
     },
     "require": {
         "vielhuber/stringhelper": "^3.8"
