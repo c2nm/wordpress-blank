@@ -34,16 +34,16 @@ Satisfy any
 </IfModule>
 
 # increase limits via .htaccess (this only works when PHP is not running in CGI mode)
-<IfModule mod_php7.c>
-php_value max_execution_time 2400
-php_value max_input_time 900
-php_value post_max_size 800M
-php_value memory_limit 512M
-php_value upload_max_filesize 800M
-php_value max_input_vars 100000
-php_value max_file_uploads 5000
-php_value realpath_cache_size 4M
-</IfModule>
+#<IfModule mod_php7.c>
+#php_value max_execution_time 2400
+#php_value max_input_time 900
+#php_value post_max_size 800M
+#php_value memory_limit 512M
+#php_value upload_max_filesize 800M
+#php_value max_input_vars 100000
+#php_value max_file_uploads 5000
+#php_value realpath_cache_size 4M
+#</IfModule>
 
 # enable hsts (security addition)
 Header set Strict-Transport-Security max-age=31536000
@@ -82,14 +82,14 @@ RewriteCond %{QUERY_STRING} author=\d
 RewriteRule ^ /? [L,R=301]
 
 # mime types
-AddType video/mp4 .mp4 
-AddType video/x-m4v .m4v
-AddType video/webm .webm 
-AddType audio/webm .weba
-AddType video/ogg .ogm 
-AddType video/ogg .ogv 
-AddType video/ogg .ogg
-AddType image/svg+xml .svg .svgz
+#AddType video/mp4 .mp4 
+#AddType video/x-m4v .m4v
+#AddType video/webm .webm 
+#AddType audio/webm .weba
+#AddType video/ogg .ogm 
+#AddType video/ogg .ogv 
+#AddType video/ogg .ogg
+#AddType image/svg+xml .svg .svgz
 
 # ssl
 RewriteEngine On
