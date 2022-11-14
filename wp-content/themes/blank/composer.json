@@ -8,6 +8,7 @@
         }
     },
     "config": {
-        "autoloader-suffix": "foo"
+        "autoloader-suffix": "",
+        "optimize-autoloader": false
     }
 }
