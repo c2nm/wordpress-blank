@@ -57,7 +57,7 @@ define( 'NONCE_SALT',       'pruocuviToGr*dt`&G@TO&u`XsoA1F$FR>KW%vTLe7^LIuT8Zmm
 $table_prefix = 'custom_';
 
 if ( ! defined( 'ABSPATH' ) ) {
-	define( 'ABSPATH', dirname( __FILE__ ) . '/' );
+	define( 'ABSPATH', __DIR__ . '/' );
 }
 
-require_once( ABSPATH . 'wp-settings.php' );
+require_once ABSPATH . 'wp-settings.php';
