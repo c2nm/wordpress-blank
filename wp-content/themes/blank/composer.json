@@ -1,4 +1,5 @@
 {
+    "name": "wordpress/blank",
     "require": {
         "vielhuber/stringhelper": "^3.8"
     },
@@ -8,7 +9,6 @@
         }
     },
     "config": {
-        "autoloader-suffix": "composer",
-        "optimize-autoloader": false
+        "autoloader-suffix": "composer"
     }
 }
