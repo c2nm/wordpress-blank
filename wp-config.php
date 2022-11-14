@@ -4,7 +4,7 @@ if( @$_SERVER['SERVER_ADMIN'] === '%MAIL_USER_1%' || @$_SERVER['NAME'] === '%ID_
     define('DB_NAME', '%DB_NAME_1%');
     define('DB_USER', '%DB_USER_1%');
     define('DB_PASSWORD', '%DB_PASSWORD_1%');
-    define('DB_HOST', 'localhost');
+    define('DB_HOST', '%DB_HOST_1%');
     define('WP_DEBUG', true);
     define('WP_DEBUG_LOG', false); // add true if you want to log to /wp-content/debug.log
     define('WP_DEBUG_DISPLAY', true);    
@@ -16,7 +16,7 @@ elseif( @$_SERVER['SERVER_ADMIN'] === '%MAIL_USER_2%' )
     define('DB_NAME', '%DB_NAME_2%');
     define('DB_USER', '%DB_USER_2%');
     define('DB_PASSWORD', '%DB_PASSWORD_2%');
-    define('DB_HOST', 'localhost');
+    define('DB_HOST', '%DB_HOST_2%');
     define('WP_DEBUG', true);
     define('WP_DEBUG_LOG', false);
     define('WP_DEBUG_DISPLAY', true);    
@@ -28,7 +28,7 @@ elseif( @$_SERVER['SERVER_ADMIN'] === '%MAIL_USER_3%' )
     define('DB_NAME', '%DB_NAME_3%');
     define('DB_USER', '%DB_USER_3%');
     define('DB_PASSWORD', '%DB_PASSWORD_3%');
-    define('DB_HOST', 'localhost');
+    define('DB_HOST', '%DB_HOST_3%');
     define('WP_DEBUG', true);
     define('WP_DEBUG_LOG', false);
     define('WP_DEBUG_DISPLAY', true);    
@@ -40,7 +40,7 @@ elseif( strpos(@$_SERVER['HTTP_HOST'], 'close2dev') !== false )
     define('DB_NAME', '%DB_NAME_TESTING%');
     define('DB_USER', '%DB_USER_TESTING%');
     define('DB_PASSWORD', '%DB_PASSWORD_TESTING%');
-    define('DB_HOST', 'localhost');
+    define('DB_HOST', '%DB_HOST_TESTING%');
     define('WP_DEBUG', false);
     define('WP_DEBUG_LOG', false);
     define('WP_DEBUG_DISPLAY', false);
