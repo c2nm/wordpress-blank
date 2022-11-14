@@ -1,5 +1,5 @@
 <?php
-if( @$_SERVER['SERVER_ADMIN'] === 'david@close2.de' || @$_SERVER['NAME'] === 'DAVID-DESKTOP' )
+if( @$_SERVER['SERVER_ADMIN'] === '%MAIL_USER_1%' || @$_SERVER['NAME'] === '%ID_USER_1%' )
 {
     define('DB_NAME', '%DB_NAME_1%');
     define('DB_USER', '%DB_USER_1%');
