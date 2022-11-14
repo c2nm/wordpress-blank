@@ -1,9 +1,9 @@
 <?php
 if( @$_SERVER['SERVER_ADMIN'] === 'david@close2.de' || @$_SERVER['NAME'] === 'DAVID-DESKTOP' )
 {
-    define('DB_NAME', 'xxxxxxxx');
-    define('DB_USER', 'xxxxxxxx');
-    define('DB_PASSWORD', 'xxxxxxxx');
+    define('DB_NAME', '%DB_NAME_1%');
+    define('DB_USER', '%DB_USER_1%');
+    define('DB_PASSWORD', '%DB_PASSWORD_1%');
     define('DB_HOST', 'localhost');
     define('WP_DEBUG', true);
     define('WP_DEBUG_LOG', false); // add true if you want to log to /wp-content/debug.log
@@ -11,11 +11,35 @@ if( @$_SERVER['SERVER_ADMIN'] === 'david@close2.de' || @$_SERVER['NAME'] === 'DA
     define('DIEONDBERROR', true);
     define('DISABLE_WP_CRON', true); // disable wp-cron (only locally)
 }
+elseif( @$_SERVER['SERVER_ADMIN'] === '%MAIL_USER_2%' )
+{
+    define('DB_NAME', '%DB_NAME_2%');
+    define('DB_USER', '%DB_USER_2%');
+    define('DB_PASSWORD', '%DB_PASSWORD_2%');
+    define('DB_HOST', 'localhost');
+    define('WP_DEBUG', true);
+    define('WP_DEBUG_LOG', false);
+    define('WP_DEBUG_DISPLAY', true);    
+    define('DIEONDBERROR', true);
+    define('DISABLE_WP_CRON', true);
+}
+elseif( @$_SERVER['SERVER_ADMIN'] === '%MAIL_USER_3%' )
+{
+    define('DB_NAME', '%DB_NAME_3%');
+    define('DB_USER', '%DB_USER_3%');
+    define('DB_PASSWORD', '%DB_PASSWORD_3%');
+    define('DB_HOST', 'localhost');
+    define('WP_DEBUG', true);
+    define('WP_DEBUG_LOG', false);
+    define('WP_DEBUG_DISPLAY', true);    
+    define('DIEONDBERROR', true);
+    define('DISABLE_WP_CRON', true);
+}
 elseif( strpos(@$_SERVER['HTTP_HOST'], 'close2dev') !== false )
 {
-    define('DB_NAME', 'xxxxxxxx');
-    define('DB_USER', 'xxxxxxxx');
-    define('DB_PASSWORD', 'xxxxxxxx');
+    define('DB_NAME', '%DB_NAME_TESTING%');
+    define('DB_USER', '%DB_USER_TESTING%');
+    define('DB_PASSWORD', '%DB_PASSWORD_TESTING%');
     define('DB_HOST', 'localhost');
     define('WP_DEBUG', false);
     define('WP_DEBUG_LOG', false);
@@ -24,9 +48,9 @@ elseif( strpos(@$_SERVER['HTTP_HOST'], 'close2dev') !== false )
 }
 else
 {
-    define('DB_NAME', 'xxxxxxxx');
-    define('DB_USER', 'xxxxxxxx');
-    define('DB_PASSWORD', 'xxxxxxxx');
+    define('DB_NAME', '%DB_NAME_PRODUCTION%');
+    define('DB_USER', '%DB_USER_PRODUCTION%');
+    define('DB_PASSWORD', '%DB_PASSWORD_PRODUCTION%');
     define('DB_HOST', 'localhost');
     define('WP_DEBUG', false);
     define('WP_DEBUG_LOG', false);
