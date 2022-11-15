@@ -16,3 +16,4 @@
 /.user.ini
 /resmushit.log
 .idea/
+package-lock.json
