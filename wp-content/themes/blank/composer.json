@@ -1,7 +1,7 @@
 {
     "version": "1.0",
     "require": {
-        "vielhuber/stringhelper": "^3.8"
+        "vielhuber/stringhelper": "*"
     },
     "autoload": {
         "psr-4": {
