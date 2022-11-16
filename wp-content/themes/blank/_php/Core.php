@@ -549,15 +549,18 @@ $rand
                 '/_build/bundle.js\';
                 if( window.pagespeed ) {
                     document.addEventListener(\'DOMContentLoaded\', function() {
-                        // do some lighthouse specific stuff
+                        /* do some lighthouse specific stuff */
+                        // too many dom elements
+                        document.querySelectorAll(\'.section + .section\').forEach($el => { $el.remove(); });
+                        // show elements above the fold before js init
                         let slider = document.querySelector(\'.intro-slider\');
-                        if( slider !== null ) { slider.remove(); }                    
+                        if( slider !== null ) { slider.style.opacity = 1; }                    
                     });
                     window.addEventListener(\'load\', function() {
                         // delay loading
                         setTimeout(function() {
                             document.head.appendChild(script);
-                        }, 2500);
+                        }, 6500);
                     });
                 }
                 else {
