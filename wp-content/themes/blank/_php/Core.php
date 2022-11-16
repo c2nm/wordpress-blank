@@ -552,6 +552,11 @@ $rand
                         /* do some lighthouse specific stuff */
                         // too many dom elements
                         document.querySelectorAll(\'.section + .section\').forEach($el => { $el.remove(); });
+                        // accessibility
+                        document.querySelectorAll(\'.specific-element\').forEach($el => {
+                            $el.style.backgroundColor = \'#fff\';
+                            $el.style.fontSize = \'16px\';
+                        });
                         // show elements above the fold before js init
                         let slider = document.querySelector(\'.intro-slider\');
                         if( slider !== null ) { slider.style.opacity = 1; }                    
