@@ -559,7 +559,13 @@ $rand
                         });
                         // show elements above the fold before js init
                         let slider = document.querySelector(\'.intro-slider\');
-                        if( slider !== null ) { slider.style.opacity = 1; }                    
+                        if( slider !== null ) { slider.style.opacity = 1; }  
+                        // mobile
+                        if( window.innerWidth < 700 ) {         
+                            document.querySelectorAll(\'.duration-500\').forEach($el => {
+                                $el.style.transition = \'none\';
+                            });
+                        }
                     });
                     window.addEventListener(\'load\', function() {
                         // delay loading
