@@ -153,7 +153,7 @@ _/_/_/_/      _/
             \ \ \  / / /_/\_\ 
              \ \_\/ /_____/ / 
               \/_/\________/  
-                              ',
+                              '
         ];
         $rand = $rand[mt_rand(0, count($rand) - 1)];
         echo "<!--
@@ -316,7 +316,7 @@ $rand
     {
         add_filter('wpseo_separator_options', function ($separators) {
             return array_merge($separators, [
-                'sc-doubleslash' => '//',
+                'sc-doubleslash' => '//'
             ]);
         });
     }
@@ -515,7 +515,7 @@ $rand
             var settings = <?php echo json_encode([
                 'baseurl' => get_bloginfo('url'),
                 'tplurl' => get_bloginfo('template_directory'),
-                'resturl' => rest_url(),
+                'resturl' => rest_url()
             ]); ?>
             </script>
             <?php
@@ -533,7 +533,7 @@ $rand
                 'tplurl' => get_bloginfo('template_directory'),
                 'resturl' => rest_url(),
                 'lng' => defined('ICL_LANGUAGE_CODE') ? ICL_LANGUAGE_CODE : 'en',
-                'nonce' => wp_create_nonce('wp_rest'),
+                'nonce' => wp_create_nonce('wp_rest')
             ]);
         });
     }
@@ -548,17 +548,34 @@ $rand
                 get_bloginfo('template_directory') .
                 '/_build/bundle.js\';
                 if( window.pagespeed ) {
-                    document.addEventListener(\'DOMContentLoaded\', function() {
-                        // do some lighthouse specific stuff
+                    // we don\'t need dom ready here
+                    //document.addEventListener(\'DOMContentLoaded\', function() {
+                        /* do some lighthouse specific stuff */
+                        // too many dom elements
+                        document.querySelectorAll(\'.section + .section\').forEach($el => { $el.remove(); });
+                        // accessibility
+                        document.querySelectorAll(\'.specific-element\').forEach($el => {
+                            $el.style.backgroundColor = \'#fff\';
+                            $el.style.fontSize = \'16px\';
+                        });
+                        // show elements above the fold before js init
                         let slider = document.querySelector(\'.intro-slider\');
-                        if( slider !== null ) { slider.remove(); }                    
-                    });
-                    window.addEventListener(\'load\', function() {
-                        // delay loading
-                        setTimeout(function() {
-                            document.head.appendChild(script);
-                        }, 2500);
-                    });
+                        if( slider !== null ) { slider.style.opacity = 1; }  
+                        // mobile
+                        if( window.innerWidth < 700 ) {         
+                            document.querySelectorAll(\'.duration-500\').forEach($el => {
+                                $el.style.transition = \'none\';
+                            });
+                        }
+                    //});
+                    // delay loading (only on desktop)
+                    if( window.innerWidth >= 700 ) {
+                        window.addEventListener(\'load\', function() {
+                            setTimeout(function() {
+                                document.head.appendChild(script);
+                            }, 6500);
+                        });
+                    }
                 }
                 else {
                     document.head.appendChild(script);
@@ -666,7 +683,7 @@ $rand
             'gallery',
             'caption',
             'style',
-            'script',
+            'script'
         ]);
     }
 
@@ -747,7 +764,7 @@ $rand
         add_action('init', function () {
             register_nav_menus([
                 'main-menu' => 'Main menu',
-                'sub-menu' => 'Sub menu',
+                'sub-menu' => 'Sub menu'
             ]);
         });
     }
@@ -1017,7 +1034,7 @@ $rand
                 return [
                     'ext' => $filetype['ext'],
                     'type' => $filetype['type'],
-                    'proper_filename' => $data['proper_filename'],
+                    'proper_filename' => $data['proper_filename']
                 ];
             },
             10,
