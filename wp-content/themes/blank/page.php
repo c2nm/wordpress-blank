@@ -10,7 +10,7 @@ if (have_posts()) {
 }
 
 // acf style
-if (function_exists('blocks')) {
+if (function_exists('have_rows')) {
     if (have_rows('blocks')) {
         if (!post_password_required()) {
             echo '<div class="items">';
