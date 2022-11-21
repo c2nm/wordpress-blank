@@ -611,6 +611,9 @@ $rand
                     $stylesheet
                 );
                 $stylesheet = str_replace('url(../_', 'url(' . get_bloginfo('template_directory') . '/_', $stylesheet);
+                // tailwind invalid variables fix (https://github.com/tailwindlabs/tailwindcss/issues/7121)
+                $stylesheet = str_replace(' ;--tw', 'var(--tw-empty,/*!*/ /*!*/);--tw', $stylesheet);
+                $stylesheet = preg_replace('/(;--tw-.+?:)( )(})/', '$1var(--tw-empty,/*!*/ /*!*/);$3', $stylesheet);
                 echo $stylesheet;
                 // this is how to embed adobe fonts (typekit)
                 /*
