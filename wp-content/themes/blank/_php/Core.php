@@ -482,6 +482,7 @@ $rand
         add_action('wp_enqueue_scripts', function () {
             wp_deregister_script('jquery');
             wp_deregister_style('wp-block-library'); // gutenberg
+            wp_deregister_style('classic-theme-styles'); // gutenberg
         });
         add_action('wp_footer', function () {
             wp_deregister_script('wp-embed');
