@@ -61,7 +61,11 @@ class Pagespeed
         ) {
             $html = file_get_contents($cache_file);
         } else {
-            $result = __curl($url, [], 'GET', [], false, false, 60, [], [], true);
+            $basic_auth = [];
+            if( @$_SERVER['PHP_AUTH_USER'] != '' && @$_SERVER['PHP_AUTH_PW'] != '' ) {
+                $basic_auth[$_SERVER['PHP_AUTH_USER']] = $_SERVER['PHP_AUTH_PW'];
+            }
+            $result = __curl($url, [], 'GET', [], false, false, 60, $basic_auth, [], true);
             $html = $result->result;
 
             $domdocument = __str_to_dom($html);
