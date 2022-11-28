@@ -1,3 +1,13 @@
+# pagespeed
+RewriteEngine On
+RewriteCond %{REQUEST_URI} !pagespeed\.php [NC]
+RewriteCond %{REQUEST_URI} !(.+)\.(.+)$ [NC]
+RewriteCond %{HTTP_USER_AGENT} (Chrome-Lighthouse) [NC,OR] # desktop and mobile
+RewriteCond %{QUERY_STRING} pagespeed=1 [NC]
+#RewriteCond %{HTTP_USER_AGENT} (Mobile.+Lighthouse) [NC] # mobile only
+#RewriteCond %{HTTP_USER_AGENT} (Firefox|Chrome) [NC] # test
+RewriteRule ^(.*)$ wp-content/themes/close2/pagespeed.php?path=$1 [L,QSA]
+
 # prevent access to dotfiles like .git
 RedirectMatch 404 /\..*$
 
