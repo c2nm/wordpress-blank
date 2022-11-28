@@ -10,37 +10,21 @@ class Pagespeed
     private $data = [
         'delete' => [
             '*' => [
-                '/html/body//a[@href="https://close2.de"]',
-                '/html/body//*[contains(concat(" ", normalize-space(@class), " "), " section ")][position()>1]',
-                '/html/body//*[contains(concat(" ", normalize-space(@class), " "), " swiper-slide ")][position()>1]',
                 '/html/body//footer',
                 '/html/*//script'
             ],
             'desktop' => [],
             'mobile' => [
-                '/html/body//*[contains(concat(" ", normalize-space(@class), " "), " lngpicker ")]',
-                '/html/body//*[contains(concat(" ", normalize-space(@class), " "), " nav-toggler ")]',
+                '/html/body//img',
                 '/html/body//picture',
-                '/html/body//svg',
-                '/html/body//img'
+                '/html/body//svg'
             ]
         ],
         'css' => [
-            '*' => '
-                .swiper-container,
-                .swiper-container .text-variable,
-                .swiper-container .intro-image,
-                .swiper-container .swiper-slide:nth-child(n+2) {
-                    opacity:1 !important;
-                    visibility:visible !important;
-                    transform: none !important;
-                }
-            ',
+            '*' => '',
             'desktop' => '',
             'mobile' => '
-                body, html,
-                .font-gotham,
-                .font-ivypresto {
+                body, html, .font-custom, header {
                     font-family: Arial;
                 }
             '
@@ -120,7 +104,7 @@ class Pagespeed
             $html = __dom_to_str($domdocument);
 
             if (!is_dir($cache_path)) {
-                mkdir($cache_path);
+                mkdir($cache_path, 0777, true);
             }
             file_put_contents($cache_file, $html);
         }
