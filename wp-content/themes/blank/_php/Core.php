@@ -79,6 +79,7 @@ class Core
         $this->advancedCustomFieldsRemoveEditorsOnAllPages();
         $this->advancedCustomFieldsReenableCustomMetaBox();
         $this->advancedCustomFieldsReduceWysiwygHeight();
+        $this->advancedCustomFieldsFlexibleContentPreview();
         $this->webPConverterAndCropThumbnailsFixPluginConflict();
         $this->autoClearCacheForWpFastestCache();
         $this->cropThumbnailsOnlyShowNeededSize();
@@ -922,6 +923,80 @@ $rand
     private function advancedCustomFieldsReduceWysiwygHeight()
     {
         add_filter('acf/render_field/type=wysiwyg', [$this, 'preRenderWysiwygField'], 0, 1);
+    }
+
+    private function advancedCustomFieldsFlexibleContentPreview()
+    {
+        add_filter(
+            'acf/fields/flexible_content/layout_title', // for specific field use "acf/fields/flexible_content/layout_title/name=custom_name"
+            function ($title, $field, $layout, $i) {
+                $custom_title = '';
+
+                // images
+                if (trim($custom_title) == '') {
+                    $subfield = get_sub_field('image') ? get_sub_field('image') : get_sub_field('images');
+                    if ($subfield) {
+                        $custom_title .= '<div style="margin-top:10px">';
+                        foreach (isset($subfield['sizes']) ? [$subfield] : $subfield as $subfield__value) {
+                            $custom_title .=
+                                '<img style="height:30px;border: 1px solid #ccd0d4" src="' .
+                                esc_url(
+                                    isset($subfield__value['image'])
+                                        ? $subfield__value['image']['sizes']['thumbnail']
+                                        : $subfield__value['sizes']['thumbnail']
+                                ) .
+                                '" />';
+                        }
+                        $custom_title .= '</div>';
+                    }
+                }
+                // simple text fields
+                foreach (
+                    ['title', 'subtitle', 'text', 'label', 'main_text', ['custom_subfield' => 'custom_name']]
+                    as $names__value
+                ) {
+                    if (trim($custom_title) == '') {
+                        $subfield = get_sub_field(
+                            is_array($names__value) ? array_keys($names__value)[0] : $names__value
+                        );
+                        if ($subfield) {
+                            $label = strip_tags(
+                                is_array($names__value) ? $subfield[array_values($names__value)[0]] : $subfield
+                            );
+                            if (mb_strlen($label) > 200) {
+                                $label = mb_substr($label, 0, 200) . '…';
+                            }
+                            $custom_title .=
+                                '<div style="margin-top:10px"><i style="font-size:10px">' . $label . '</i></div>';
+                        }
+                    }
+                }
+                // info messages
+                if (trim($custom_title) == '') {
+                    if (isset($layout['sub_fields']) && !empty($layout['sub_fields'])) {
+                        foreach ($layout['sub_fields'] as $subfields__value) {
+                            if (isset($subfields__value['type']) && $subfields__value['type'] === 'message') {
+                                $custom_title .=
+                                    '<div style="margin-top:10px"><i style="font-size:10px">' .
+                                    $subfields__value['message'] .
+                                    '</i></div>';
+                            }
+                        }
+                    }
+                }
+                // other: empty div
+                if (trim($custom_title) == '') {
+                    $custom_title .= '<div style="margin-top:10px"><i style="font-size:10px">&nbsp;</i></div>';
+                }
+
+                if (trim($custom_title) != '') {
+                    $title .= $custom_title;
+                }
+                return $title;
+            },
+            10,
+            4
+        );
     }
 
     public function preRenderWysiwygField()
