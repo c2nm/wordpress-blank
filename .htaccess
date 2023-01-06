@@ -25,7 +25,7 @@ RewriteRule ^(.*)$ wp-content/themes/blank/pagespeed.php?path=$1 [L,QSA]
 <IfModule mod_rewrite.c>
     RewriteCond %{SCRIPT_FILENAME} -d [OR]
     RewriteCond %{SCRIPT_FILENAME} -f
-    RewriteRule "^(composer\.json|composer\.lock|gulpfile\.js|package-lock\.json|package\.json|vendor)" - [F]
+    RewriteRule "(composer\.json|composer\.lock|gulpfile\.js|package-lock\.json|package\.json|vendor)" - [F]
 </IfModule>
 
 # password on testing
