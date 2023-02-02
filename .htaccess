@@ -17,15 +17,10 @@ RewriteRule ^(.*)$ wp-content/themes/blank/pagespeed.php?path=$1 [L,QSA]
 </IfModule>
 
 # block access to sensitive files
-<FilesMatch "(^#.*#|\.(db|bak|conf|dist|fla|in[ci]|log|orig|psd|sh|sql|sw[op])|~)$">
-  Require all denied
-</FilesMatch>
-
-# block access to framework-specific files
 <IfModule mod_rewrite.c>
     RewriteCond %{SCRIPT_FILENAME} -d [OR]
     RewriteCond %{SCRIPT_FILENAME} -f
-    RewriteRule "(composer\.json|composer\.lock|gulpfile\.js|package-lock\.json|package\.json|vendor)" - [F]
+    RewriteRule "\.(db|bak|conf|dist|fla|in[ci]|log|orig|psd|sh|sql|sw[op])|composer\.json|composer\.lock|gulpfile\.js|package-lock\.json|package\.json|themes/.+/vendor" - [F]
 </IfModule>
 
 # password on testing
