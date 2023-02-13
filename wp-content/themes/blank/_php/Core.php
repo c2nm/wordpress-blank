@@ -305,6 +305,7 @@ $rand
                 $data['to'] =
                     isset($_SERVER['SERVER_ADMIN']) &&
                     $_SERVER['SERVER_ADMIN'] != '' &&
+                    strpos($_SERVER['SERVER_ADMIN'], '@') !== false &&
                     strpos($_SERVER['SERVER_ADMIN'], 'webmaster@') === false
                         ? $_SERVER['SERVER_ADMIN']
                         : 'support@close2.de';
