@@ -120,7 +120,10 @@ class ImageHelper
             echo ' ' . $img_attrs__key . '="' . $img_attrs__value . '"';
         }
         echo ' />';
-        echo '</picture>';
+
+        if ($is_pixel) {
+            echo '</picture>';
+        }
     }
 
     private function getSizeName($size, $cropped)

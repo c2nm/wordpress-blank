@@ -30,25 +30,25 @@ class Acf
                                     [
                                         'key' => 'field_' . md5('field_blocks_image_file'),
                                         'label' => 'Datei',
-                                        'name' => 'file',
+                                        'name' => 'image',
                                         'type' => 'image',
                                         'instructions' => '1600x1200',
-                                        'return_format' => 'array',
-                                    ],
-                                ],
-                            ],
-                        ],
-                    ],
+                                        'return_format' => 'array'
+                                    ]
+                                ]
+                            ]
+                        ]
+                    ]
                 ],
                 'location' => [
                     [
                         [
                             'param' => 'post_type',
                             'operator' => '==',
-                            'value' => 'page',
-                        ],
-                    ],
-                ],
+                            'value' => 'page'
+                        ]
+                    ]
+                ]
             ]);
         }
     }

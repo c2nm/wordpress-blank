@@ -1,9 +1,27 @@
-# prevent access to dotfiles like .git
-RedirectMatch 404 /\..*$
+# pagespeed
+RewriteEngine On
+RewriteCond %{REQUEST_URI} !pagespeed\.php [NC]
+RewriteCond %{REQUEST_URI} !(.+)\.(.+)$ [NC]
+RewriteCond %{HTTP_USER_AGENT} (Chrome-Lighthouse) [NC,OR] # desktop and mobile
+RewriteCond %{QUERY_STRING} pagespeed=1 [NC]
+#RewriteCond %{HTTP_USER_AGENT} (Mobile.+Lighthouse) [NC] # mobile only
+#RewriteCond %{HTTP_USER_AGENT} (Firefox|Chrome) [NC] # test
+RewriteRule ^(.*)$ wp-content/themes/blank/pagespeed.php?path=$1 [L,QSA]
 
-# prevent access to composer files
-RedirectMatch 404 composer.json$
-RedirectMatch 404 composer.lock$
+# block access to dot-files and -folders (except .well-known)
+<IfModule mod_rewrite.c>
+    RewriteCond %{REQUEST_URI} "!(^|/)\.well-known/([^./]+./?)+$" [NC]
+    RewriteCond %{SCRIPT_FILENAME} -d [OR]
+    RewriteCond %{SCRIPT_FILENAME} -f
+    RewriteRule "(^|/)\." - [F]
+</IfModule>
+
+# block access to sensitive files
+<IfModule mod_rewrite.c>
+    RewriteCond %{SCRIPT_FILENAME} -d [OR]
+    RewriteCond %{SCRIPT_FILENAME} -f
+    RewriteRule "\.(db|bak|conf|dist|fla|in[ci]|log|orig|psd|sh|sql|sw[op])|composer\.json|composer\.lock|gulpfile\.js|package-lock\.json|package\.json|themes/.+/vendor" - [F]
+</IfModule>
 
 # password on testing
 <IfModule !mod_win32.c>

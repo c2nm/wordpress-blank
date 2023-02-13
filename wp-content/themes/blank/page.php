@@ -10,16 +10,16 @@ if (have_posts()) {
 }
 
 // acf style
-if (function_exists('blocks')) {
+if (function_exists('have_rows')) {
     if (have_rows('blocks')) {
         if (!post_password_required()) {
             echo '<div class="items">';
             while (have_rows('blocks')) {
                 the_row();
-                if (file_exists(get_template_directory() . '/_blocks/' . get_row_layout() . '.php')) {
+                if (file_exists(get_template_directory() . '/_php/_blocks/' . get_row_layout() . '.php')) {
                     echo '<div class="item item--' . get_row_layout() . '">';
                     echo '<div class="item__inner">';
-                    include get_template_directory() . '/_blocks/' . get_row_layout() . '.php';
+                    include get_template_directory() . '/_php/_blocks/' . get_row_layout() . '.php';
                     echo '</div>';
                     echo '</div>';
                 }

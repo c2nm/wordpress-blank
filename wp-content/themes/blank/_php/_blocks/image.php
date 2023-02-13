@@ -1,6 +1,6 @@
 <?php
 \WP\ImageHelper::img(
-    get_sub_field('file'),
+    get_sub_field('image'),
     'test-class',
     [0.5, 1],
     '1600x1200',
