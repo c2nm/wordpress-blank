@@ -812,10 +812,17 @@ $rand
         }
         // enable cache busting on production on file change
         if (self::isProduction()) {
-            $src_abs = $src;
-            $src_abs = str_replace(get_bloginfo('url').'/', ABSPATH, $src_abs);
-            $src_abs = str_replace(get_template_directory_uri(), get_template_directory(), $src_abs);
-            $src = add_query_arg('ver', filemtime($src_abs), $src);
+            if(
+                strpos($src, 'http') === false || strpos($src, get_bloginfo('url')) !== false
+            ) {
+                $src_abs = $src;
+                $src_abs = str_replace(get_bloginfo('url').'/', ABSPATH, $src_abs);
+                $src_abs = str_replace(get_template_directory_uri(), get_template_directory(), $src_abs);
+                if( strpos($src_abs, '?') !== false ) { $src_abs = substr($src_abs, 0, strpos($src_abs, '?')); }
+                if( file_exists($src_abs) ) {
+                    $src = add_query_arg('ver', filemtime($src_abs), $src);
+                }
+            }
         }
         return $src;
     }
