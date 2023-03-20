@@ -64,6 +64,7 @@ class Core
         $this->blockSubscribersFromAdmin();
         $this->removeWordPressVersionInHead();
         $this->disableWpCors();
+        $this->fixWpJsonOrigin();
 
         /* performance */
         $this->addAsyncDeferToJsFiles();
@@ -912,6 +913,23 @@ $rand
             },
             15
         );
+    }
+
+    private function fixWpJsonOrigin()
+    {
+        /*
+        on /wp-json/ routes, if you set the "Origin" header in the request,
+        that makes then wordpress respond with that same value in "Access-Control-Allow-Origin" in the response
+        burp suite sees this as a vulneraribility; fix that
+        */
+        add_action('rest_api_init', function () {
+            add_filter('http_origin', function ($origin) {
+                if (strpos($origin, get_bloginfo('url')) !== false) {
+                    return $origin;
+                }
+                return get_bloginfo('url');
+            });
+        });
     }
 
     private function disableWelcomeEmailsOnMultisiteRegistrations()
