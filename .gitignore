@@ -17,3 +17,5 @@
 /resmushit.log
 .idea/
 package-lock.json
+desktop.ini
+.DS_Store
