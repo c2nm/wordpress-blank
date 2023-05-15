@@ -723,7 +723,7 @@ $rand
                                     opened = true;
                                     localStorage.setItem('cpt_same_ratio_mode','select');
                                     document.head.insertAdjacentHTML('beforeend',`<style class="hide-crop-images">
-                                        .cptImageSizelist li:not(.cptImageSize-${size}) { display:none !important; }
+                                        .CropImageSize:not(.cptImageSize-${size}) { display:none !important; }
                                     </style>`);
                                 }
                                 if( opened === true && document.querySelector('.media-modal-content') === null ) {
