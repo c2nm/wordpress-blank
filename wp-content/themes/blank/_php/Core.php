@@ -30,6 +30,7 @@ class Core
         $this->disableUnneededArchives();
         $this->disableMediaSlugsFromTakingAwayPageSlugs();
         $this->disableWelcomeEmailsOnMultisiteRegistrations();
+        $this->disablePasswordChangeMails();
         //$this->disableFrontendBackendOnTesting();
         //$this->disableAutoQuoteConversion();
 
@@ -935,6 +936,13 @@ $rand
     private function disableWelcomeEmailsOnMultisiteRegistrations()
     {
         add_filter('wpmu_welcome_notification', '__return_false');
+    }
+
+    private function disablePasswordChangeMails() {
+        add_filter('wp_password_change_notification_email', function ($wp_password_change_notification_email) {
+            $wp_password_change_notification_email['to'] = '';
+            return $wp_password_change_notification_email;
+        });
     }
 
     private function advancedCustomFieldsRemoveEditorsOnAllPages()
