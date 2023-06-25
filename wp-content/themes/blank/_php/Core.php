@@ -12,6 +12,7 @@ class Core
     {
         /* general */
         $this->addMenus();
+        $this->addConstants();
         $this->addFavicon();
         $this->removeEmojis();
         $this->enableSvgUpload();
@@ -389,6 +390,34 @@ $rand
         add_filter('big_image_size_threshold', '__return_false');
     }
 
+    private function videoCookieConsent($provider)
+    {
+        $provider_full_name = '';
+        switch ($provider) {
+            case 'youtube':
+                $provider_full_name = 'YouTube';
+                break;
+            case 'vimeo':
+                $provider_full_name = 'Vimeo';
+                break;
+        }
+
+        return '<div class="privacy-text hidden"><div class="privacy-text__inner">' .
+            '<div class="optoutin"><span class="optoutin-switch" data-cookie="cc_accept_' .
+            $provider .
+            '"><span class="switch rounded-important"></span></span><div class="text">' .
+            sprintf(
+                'Ich möchte %s-Inhalte aktivieren und stimme zu, dass Daten von %s geladen werden (siehe %sDatenschutz%s)',
+                $provider_full_name,
+                $provider_full_name,
+                '<a href="' .
+                get_permalink(get_field('page_privacy', 'option')->ID) .
+                '" target="_blank" class="underline">',
+                '</a>'
+            ) .
+            '</div></div></div></div>';
+    }
+
     private function backendSearchInAltTags()
     {
         add_filter(
@@ -703,6 +732,7 @@ $rand
             add_image_size('400x500', 400, 500, true);
             add_image_size('400x800', 400, 800, true);
             add_image_size('1600x1200', 1600, 1200, true);
+            add_image_size('1920x600', 1920, 600, true);
             add_image_size('600x', 600, 9999, false); // no crop example
         });
     }
@@ -772,9 +802,17 @@ $rand
         add_action('init', function () {
             register_nav_menus([
                 'main-menu' => 'Main menu',
-                'sub-menu' => 'Sub menu'
+                'sub-menu' => 'Sub menu (Top bar)',
+                'footer' => 'Footer menu'
             ]);
         });
+    }
+
+    private function addConstants()
+    {
+        define('LOGO', get_bloginfo('template_directory') . '/_assets/images/logo.svg');
+        define('IMAGES_PATH', get_bloginfo('template_directory') . '/_assets/_images/');
+        define('ICONS_PATH', get_bloginfo('template_directory') . '/_assets/_icons/');
     }
 
     private function disableAutoParagraph()

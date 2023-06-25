@@ -1,8 +1,8 @@
+<?php include '_templates/_common/footer.php'; ?>
+
 <?php
-echo '</main>';
-echo '<footer>';
-echo '&copy; ' . date('Y');
-echo '</footer>';
 wp_footer();
-echo '</body>';
-echo '</html>';
+?>
+
+</body>
+</html>
