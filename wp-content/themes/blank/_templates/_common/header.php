@@ -1,5 +1,5 @@
 <header id="header">
-    <div id="header-overlay hidden"></div>
+    <div id="header-overlay" class="hidden"></div>
     <nav class="fixed z-50 w-full bg-white top-0 flex flex-wrap items-center justify-between py-4 shadow-lg">
         <div class="container mx-auto px-6 md:px-20 lg:px-8 flex flex-wrap items-center justify-between">
             <div class="w-full relative flex justify-between lg:w-auto lg:static lg:block lg:justify-start">
