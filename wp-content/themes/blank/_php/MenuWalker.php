@@ -70,7 +70,7 @@ class MenuWalker extends \Walker_Nav_Menu
             (get_field('header_invert', 'option') ? 'md:left-0' : 'md:right-0') .
             '  md:w-80 md:opacity-0 md:invisible md:transform md:-translate-y-2"><div class="fixed top-0 left-0 bg-error"></div>';
         $output .=
-            '<ul class="dropdown-menu text-primary-light md:-mb-5 pb-3 md:pt-8 md:pb-7 md:px-6 md:bg-tertiary-light">';
+            '<ul class="dropdown-menu text-primary-light md:-mb-5 pb-3 md:pt-8 md:pb-7 md:px-6 md:bg-tertiary">';
     }
 
     /**
