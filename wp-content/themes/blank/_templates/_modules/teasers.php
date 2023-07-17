@@ -53,7 +53,7 @@ $teasers = get_sub_field('teasers');
                             $teaser_text = apply_filters('the_content', $teaser['content']['text']);
                             ?>
 
-                            <div class="box-item mt-10 first:mt-0">
+                            <div class="box-item w-full mt-10 first:mt-0">
                                 <div class="md:flex md:flex-nowrap shadow-2xl">
                                     <div class="w-full md:w-1/2 relative">
                                         <?php if ($teaser_image) {
