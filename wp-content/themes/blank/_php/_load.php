@@ -3,7 +3,6 @@ namespace WP;
 
 new Core();
 new Acf();
-//new MenuWalker();
 new Example();
 new SendComment();
 new ImageHelper(

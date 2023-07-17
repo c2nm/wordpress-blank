@@ -1,6 +1,7 @@
 <?php
+namespace WP;
 
-class MenuWalker extends Walker_Nav_Menu
+class MenuWalker extends \Walker_Nav_Menu
 {
     /**
      * Start the element output.
@@ -25,8 +26,8 @@ class MenuWalker extends Walker_Nav_Menu
         $output .=
             $depth === 0
                 ? '<li class="' .
-                    $classes .
-                    ' level-0 group mb-2 md:mb-0 md:h-16 relative md:flex md:transition-all md:duration-300 md:ease-in-out w-full md:w-auto">'
+                $classes .
+                ' level-0 group mb-2 md:mb-0 md:h-16 relative md:flex md:transition-all md:duration-300 md:ease-in-out w-full md:w-auto">'
                 : '<li class="md:mb-5 ' . $classes . '">';
         $attributes = '';
 
@@ -34,14 +35,14 @@ class MenuWalker extends Walker_Nav_Menu
         $attributes .=
             ' class=" font-primary text-white md:text-gray-600 leading-none transition-all duration-300 ease-in-out w-full md:w-auto group ' .
             ($depth === 0
-                ? 'nav-main-link flex items-center justify-start text-14 md:text-18 font-normal py-2 md:py-6 md:px-4 lg:px-9 uppercase'
+                ? 'nav-main-link flex items-center justify-start text-14 md:text-18 font-normal py-2 md:py-4 md:px-4 lg:px-9 uppercase'
                 : 'nav-sub-link relative text-14 md:text-18 text-white font-normal opacity-90 hover:text-secondary-light md:text-primary-light md:opacity-60 md:opacity-100 flex justify-start items-center ml-2 md:ml-0 py-2 md:py-0 group md:hover:text-primary-light no-underline focus:no-underline active:no-underline md:hover:underline md:focus:underline md:active:underline') .
             '"';
 
         !empty($item->attr_title) and
-            // Avoid redundant titles
-            $item->attr_title !== $item->title and
-            ($attributes .= ' title="' . esc_attr($item->attr_title) . '"');
+        // Avoid redundant titles
+        $item->attr_title !== $item->title and
+        ($attributes .= ' title="' . esc_attr($item->attr_title) . '"');
 
         !empty($item->url) and ($attributes .= ' href="' . esc_attr($item->url) . '"');
 
