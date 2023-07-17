@@ -1,4 +1,4 @@
-<footer class="bg-gray-100 text-center text-gray-600 lg:text-left">
+<footer id="footer" class="bg-gray-100 text-center text-gray-600 lg:text-left">
     <div class="container mx-auto px-6 md:px-20 lg:px-8">
         <div class="flex items-center justify-center border-b-2 border-gray-200 py-6 lg:justify-between">
             <div class="mr-12 hidden lg:block">
