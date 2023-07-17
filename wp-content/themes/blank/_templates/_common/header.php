@@ -1,6 +1,6 @@
-<header id="header">
+<header id="header" class="fixed top-0 left-0 w-full md:h-24 z-50">
     <div id="header-overlay" class="hidden"></div>
-    <nav class="fixed z-50 w-full bg-white top-0 flex flex-wrap items-center justify-between py-4 shadow-lg">
+    <nav class="w-full md:h-24 bg-white flex flex-wrap items-center justify-between py-4 shadow-lg">
         <div class="container mx-auto px-6 md:px-20 lg:px-8 flex flex-wrap items-center justify-between">
             <div class="w-full relative flex justify-between lg:w-auto lg:static lg:block lg:justify-start">
                 <a class="text-sm font-medium leading-relaxed inline-block mr-4 py-2 whitespace-nowrap uppercase text-slate-700" href="#">Logo goes here</a>
