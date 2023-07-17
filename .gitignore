@@ -13,6 +13,7 @@
 /wp-content/uploads/sites/*/wpforms/cache/
 /wp-content/uploads/wpcf7_captcha/
 /wp-content/wflogs/
+/wp-content/resources/flow-flow/cache
 /.user.ini
 /resmushit.log
 .idea/
