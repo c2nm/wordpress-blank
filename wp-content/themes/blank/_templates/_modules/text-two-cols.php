@@ -5,9 +5,7 @@ $text_left = apply_filters('the_content', get_sub_field('text_left'));
 $text_right = apply_filters('the_content', get_sub_field('text_right'));
 ?>
 
-<div class="section-inner">
-
-
+<div class="section-inner overflow-hidden">
     <div class="container mx-auto px-6 md:px-20 lg:px-8 relative z-10">
         <?php if ($title || $subtitle) { ?>
             <div class="md:grid md:grid-cols-12 md:gap-4 mb-12 md:mb-16">

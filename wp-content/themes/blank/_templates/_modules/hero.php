@@ -8,7 +8,7 @@ $content_text = apply_filters('the_content', get_sub_field('content')['text']);
 $content_text_layout = apply_filters('the_content', get_sub_field('content')['text_layout']);
 ?>
 
-<div class="section-inner">
+<div class="section-inner overflow-hidden">
     <div class="section-inner-top">
         <div class="container mx-auto px-6 md:px-20 lg:px-8">
             <?php if ($title || $subtitle) { ?>

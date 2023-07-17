@@ -21,6 +21,6 @@ switch ($spacer_height) {
 }
 ?>
 
-<div class="section-inner <?= $height ?> bg-<?= $spacer_bg ?> ">
+<div class="section-inner overflow-hidden <?= $height ?> bg-<?= $spacer_bg ?> ">
     <div class="spacer__inner <?= $spacer_border ? 'border-t ' . $border_color : '' ?>"></div>
 </div>

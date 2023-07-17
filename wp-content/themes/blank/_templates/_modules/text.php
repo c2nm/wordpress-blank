@@ -5,7 +5,7 @@ $text = apply_filters('the_content', get_sub_field('text'));
 $text_highlighted = get_sub_field('text_highlighted');
 ?>
 
-<div class="section-inner">
+<div class="section-inner overflow-hidden">
     <div class="container mx-auto px-6 md:px-20 lg:px-8 relative z-10">
         <div class="content mx-auto">
             <?php if ($title || $subtitle) { ?>

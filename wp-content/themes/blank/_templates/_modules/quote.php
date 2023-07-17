@@ -5,7 +5,7 @@ $quote_content = apply_filters('the_content', get_sub_field('quote')['content'])
 $quote_author = apply_filters('the_content', get_sub_field('quote')['author']);
 ?>
 
-<div class="section-inner">
+<div class="section-inner overflow-hidden">
     <div class="section-top">
         <div class="container mx-auto px-6 md:px-20 lg:px-8">
             <?php if ($title || $subtitle) { ?>

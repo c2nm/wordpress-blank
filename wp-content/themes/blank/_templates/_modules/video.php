@@ -3,7 +3,7 @@ $title = apply_filters('the_content', get_sub_field('module_headline')['title'])
 $subtitle = apply_filters('the_content', get_sub_field('module_headline')['subtitle']);
 ?>
 
-<div class="section-inner">
+<div class="section-inner overflow-hidden">
     <?php if ($title || $subtitle) { ?>
         <div class="section-inner-top">
             <div class="container container-narrow mx-auto px-6 md:px-20 lg:px-8">

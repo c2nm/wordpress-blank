@@ -4,7 +4,7 @@ $subtitle = apply_filters('the_content', get_sub_field('module_headline')['subti
 $teasers = get_sub_field('teasers');
 ?>
 
-<div class="section-inner">
+<div class="section-inner overflow-hidden">
     <div class="section-inner-top pb-16 md:pb-32">
         <div class="container container-narrow mx-auto px-6 md:px-20 lg:px-8">
             <?php if ($title || $subtitle) { ?>

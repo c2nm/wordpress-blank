@@ -4,7 +4,7 @@ $subtitle = apply_filters('the_content', get_sub_field('module_headline')['subti
 $iframe = get_sub_field('iframe');
 ?>
 
-<div class="section-inner">
+<div class="section-inner overflow-hidden">
     <div class="container container-narrow mx-auto px-6 md:px-20 lg:px-8">
         <?php if ($title || $subtitle) { ?>
             <div class="md:grid md:grid-cols-12 md:gap-4 mb-12 md:mb-16">
