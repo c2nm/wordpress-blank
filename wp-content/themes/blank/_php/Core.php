@@ -549,7 +549,10 @@ $rand
             var settings = <?php echo json_encode([
                 'baseurl' => get_bloginfo('url'),
                 'tplurl' => get_bloginfo('template_directory'),
-                'resturl' => rest_url()
+                'resturl' => rest_url(),
+                'lng' => defined('ICL_LANGUAGE_CODE') ? ICL_LANGUAGE_CODE : 'en',
+                'nonce' => wp_create_nonce('wp_rest'),
+                'environment' => self::isProduction() ? 'prod' : 'dev'
             ]); ?>
             </script>
             <?php
@@ -567,7 +570,8 @@ $rand
                 'tplurl' => get_bloginfo('template_directory'),
                 'resturl' => rest_url(),
                 'lng' => defined('ICL_LANGUAGE_CODE') ? ICL_LANGUAGE_CODE : 'en',
-                'nonce' => wp_create_nonce('wp_rest')
+                'nonce' => wp_create_nonce('wp_rest'),
+                'environment' => self::isProduction() ? 'prod' : 'dev'
             ]);
         });
     }
