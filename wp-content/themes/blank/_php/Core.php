@@ -411,8 +411,8 @@ $rand
                 $provider_full_name,
                 $provider_full_name,
                 '<a href="' .
-                get_permalink(get_field('page_privacy', 'option')->ID) .
-                '" target="_blank" class="underline">',
+                    get_permalink(get_field('page_privacy', 'option')->ID) .
+                    '" target="_blank" class="underline">',
                 '</a>'
             ) .
             '</div></div></div></div>';
@@ -856,14 +856,14 @@ $rand
         }
         // enable cache busting on production on file change
         if (self::isProduction()) {
-            if(
-                strpos($src, 'http') === false || strpos($src, get_bloginfo('url')) !== false
-            ) {
+            if (strpos($src, 'http') === false || strpos($src, get_bloginfo('url')) !== false) {
                 $src_abs = $src;
-                $src_abs = str_replace(get_bloginfo('url').'/', ABSPATH, $src_abs);
+                $src_abs = str_replace(get_bloginfo('url') . '/', ABSPATH, $src_abs);
                 $src_abs = str_replace(get_template_directory_uri(), get_template_directory(), $src_abs);
-                if( strpos($src_abs, '?') !== false ) { $src_abs = substr($src_abs, 0, strpos($src_abs, '?')); }
-                if( file_exists($src_abs) ) {
+                if (strpos($src_abs, '?') !== false) {
+                    $src_abs = substr($src_abs, 0, strpos($src_abs, '?'));
+                }
+                if (file_exists($src_abs)) {
                     $src = add_query_arg('ver', filemtime($src_abs), $src);
                 }
             }
@@ -980,7 +980,8 @@ $rand
         add_filter('wpmu_welcome_notification', '__return_false');
     }
 
-    private function disablePasswordChangeMails() {
+    private function disablePasswordChangeMails()
+    {
         add_filter('wp_password_change_notification_email', function ($wp_password_change_notification_email) {
             $wp_password_change_notification_email['to'] = '';
             return $wp_password_change_notification_email;
@@ -1243,7 +1244,7 @@ $rand
         // clear cache for "WP Fastest Cache" programmatically every hour
         add_action('init', function () {
             $task = 'wp_fastest_cache_clear_cache';
-            $frequency = 'daily'; // hourly|twicedaily|daily
+            $frequency = 'hourly'; // hourly|twicedaily|daily
             add_action($task, function () {
                 if (function_exists('wpfc_clear_all_cache')) {
                     wpfc_clear_all_cache(true);
