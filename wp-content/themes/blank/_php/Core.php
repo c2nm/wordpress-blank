@@ -254,7 +254,12 @@ $rand
 
     private function disableBackendLanguageSwitcher()
     {
+        // wordpress
         add_filter('login_display_language_dropdown', '__return_false');
+        // wpml
+        add_action('login_head', function() {
+            echo '<style>.wpml-login-ls { display: none !important; }</style>';
+        });
     }
 
     private function removeBulkHeaderLinksAndOembed()
