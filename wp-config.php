@@ -78,6 +78,9 @@ define( 'SECURE_AUTH_SALT', '$8BW;?J&7aTJP9MzX$chx>N>^M?L%7gawy 0pk`EQbku+x_`|Eb
 define( 'LOGGED_IN_SALT',   '%-GkZ+&qlhP:ep/jiZ5Ur}gIZa~;,e16TvIH-2cDB=y# 6K-jsa7=`6]tlm8XqXV' );
 define( 'NONCE_SALT',       'pruocuviToGr*dt`&G@TO&u`XsoA1F$FR>KW%vTLe7^LIuT8Zmm*[g7_/){Xy,r%' );
 
+// limit post revisions to 10 (because this leads always to memory limit bottlenecks on big pages)
+define('WP_POST_REVISIONS', 10);
+
 $table_prefix = 'custom_';
 
 if ( ! defined( 'ABSPATH' ) ) {
