@@ -11,18 +11,19 @@ namespace WP;
  * example call inside template:
  * \WP\ImageHelper::img(
  *     // the actual image
- *     get_field('image', 2),
+ *     image: get_field('image', 2),
  *     // class
- *     'test-class',
- *     // ratios
- *     // which width of the screen does the image approximately take?
- *     // use for example 3 values for 3 layouts defined in new ImageHelper()
- *     [0.5, 1, 1],
- *     // do you want to use (an auto generated) cropped version of the image?
- *     // use the name of the crop here
- *     '1900x1200',
- *     ['data-foo' => 'bar', 'alt' => 'specific alt tag'],
- *     true
+ *     class: 'test-class',
+ *     // ratios; which width of the screen does the image approximately take? use for example 3 values for 3 layouts defined in new ImageHelper()
+ *     ratios: [0.5, 1, 1],
+ *     // do you want to use (an auto generated) cropped version of the image? use the name of the crop here
+ *     cropped: '1900x1200',
+ *     // custom attributes
+ *     attrs: ['data-foo' => 'bar', 'alt' => 'specific alt tag'],
+ *     // add lazy load attribute
+ *     lazy: true,
+ *     // echo output
+ *     echo: false
  * );
  *
  * @author David Vielhuber <david@close2.de>
