@@ -58,7 +58,7 @@ class ImageHelper
         $echo = true
     ) {
         $obj = new ImageHelper();
-        $obj->renderImage($image, $class, $ratios, $cropped, $attrs, $lazy, $echo);
+        return $obj->renderImage($image, $class, $ratios, $cropped, $attrs, $lazy, $echo);
     }
 
     public function renderImage(
@@ -155,7 +155,7 @@ class ImageHelper
         if ($echo === false) {
             $html = ob_get_contents();
             ob_end_clean();
-            echo $html;
+            return $html;
         }
     }
 
