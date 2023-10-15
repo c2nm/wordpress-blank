@@ -7,10 +7,28 @@ namespace WP;
  * This generates multiple smaller versions of (already defined)
  * cropped and non-cropped versions and provides a simple
  * helper function to output images (in a <picture>-tag).
+ * 
+ * example call inside template:
+ * \WP\ImageHelper::img(
+ *     // the actual image
+ *     get_field('image', 2),
+ *     // class
+ *     'test-class',
+ *     // ratios
+ *     // which width of the screen does the image approximately take?
+ *     // use for example 3 values for 3 layouts defined in new ImageHelper()
+ *     [0.5, 1, 1],
+ *     // do you want to use (an auto generated) cropped version of the image?
+ *     // use the name of the crop here
+ *     '1900x1200',
+ *     ['data-foo' => 'bar', 'alt' => 'specific alt tag'],
+ *     true
+ * );
  *
  * @author David Vielhuber <david@close2.de>
- * @version 1.0.4
+ * @version 1.0.5
  */
+
 class ImageHelper
 {
     public static $init = false;
@@ -31,16 +49,6 @@ class ImageHelper
 
     public static function img(...$args)
     {
-        /* example call inside template:
-        \WP\ImageHelper::img(
-            get_field('image', 2),
-            'test-class',
-            [0.5, 1],
-            '1900x1200',
-            ['data-foo' => 'bar', 'alt' => 'specific alt tag'],
-            true
-        );
-        */
         $obj = new ImageHelper();
         $obj->renderImage(...$args);
     }
