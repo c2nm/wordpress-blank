@@ -53,10 +53,14 @@ class ImageHelper
         $obj->renderImage(...$args);
     }
 
-    public function renderImage($image, $class = null, $ratios = [1, 1, 1], $cropped = null, $attrs = [], $lazy = true)
+    public function renderImage($image, $class = null, $ratios = [1, 1, 1], $cropped = null, $attrs = [], $lazy = true, $echo = true)
     {
         if ($image == '' || empty($image)) {
             return;
+        }
+
+        if( $echo === false ) {
+            ob_start();
         }
 
         $is_pixel = isset($image['mime_type']) && in_array(@$image['mime_type'], ['image/jpeg', 'image/png']);
@@ -131,6 +135,12 @@ class ImageHelper
 
         if ($is_pixel) {
             echo '</picture>';
+        }
+
+        if( $echo === false ) {
+            $html = ob_get_contents();
+            ob_end_clean();
+            echo $html;
         }
     }
 
