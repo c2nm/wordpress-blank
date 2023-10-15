@@ -7,7 +7,7 @@ namespace WP;
  * This generates multiple smaller versions of (already defined)
  * cropped and non-cropped versions and provides a simple
  * helper function to output images (in a <picture>-tag).
- * 
+ *
  * example call inside template:
  * \WP\ImageHelper::img(
  *     // the actual image
@@ -48,19 +48,33 @@ class ImageHelper
         }
     }
 
-    public static function img(...$args)
-    {
+    public static function img(
+        $image,
+        $class = null,
+        $ratios = [1, 1, 1],
+        $cropped = null,
+        $attrs = [],
+        $lazy = true,
+        $echo = true
+    ) {
         $obj = new ImageHelper();
-        $obj->renderImage(...$args);
+        $obj->renderImage($image, $class, $ratios, $cropped, $attrs, $lazy, $echo);
     }
 
-    public function renderImage($image, $class = null, $ratios = [1, 1, 1], $cropped = null, $attrs = [], $lazy = true, $echo = true)
-    {
+    public function renderImage(
+        $image,
+        $class = null,
+        $ratios = [1, 1, 1],
+        $cropped = null,
+        $attrs = [],
+        $lazy = true,
+        $echo = true
+    ) {
         if ($image == '' || empty($image)) {
             return;
         }
 
-        if( $echo === false ) {
+        if ($echo === false) {
             ob_start();
         }
 
@@ -138,7 +152,7 @@ class ImageHelper
             echo '</picture>';
         }
 
-        if( $echo === false ) {
+        if ($echo === false) {
             $html = ob_get_contents();
             ob_end_clean();
             echo $html;
