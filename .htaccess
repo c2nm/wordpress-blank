@@ -8,7 +8,7 @@ RewriteCond %{QUERY_STRING} pagespeed=1 [NC]
 #RewriteCond %{HTTP_USER_AGENT} (Firefox|Chrome) [NC] # test
 RewriteRule ^(.*)$ wp-content/themes/blank/pagespeed.php?path=$1 [L,QSA]
 
-# block access to dot-files and -folders (except .well-known)
+# block access to dot-files and dot-folders (except .well-known)
 <IfModule mod_rewrite.c>
     RewriteCond %{REQUEST_URI} "!(^|/)\.well-known/([^./]+./?)+$" [NC]
     RewriteCond %{SCRIPT_FILENAME} -d [OR]
@@ -16,11 +16,18 @@ RewriteRule ^(.*)$ wp-content/themes/blank/pagespeed.php?path=$1 [L,QSA]
     RewriteRule "(^|/)\." - [F]
 </IfModule>
 
-# block access to sensitive files
+# block access to sensitive files (special filetypes and composer/package)
 <IfModule mod_rewrite.c>
     RewriteCond %{SCRIPT_FILENAME} -d [OR]
     RewriteCond %{SCRIPT_FILENAME} -f
-    RewriteRule "(\.(db|bak|conf|dist|fla|in[ci]|log|orig|psd|sh|sql|sw[op])|composer\.json|composer\.lock|gulpfile\.js|package-lock\.json|package\.json)|((^|\/)vendor\/.*)$" - [F]
+    RewriteRule "(\.(db|bak|conf|dist|fla|in[ci]|log|orig|psd|sh|sql|sw[op])|composer\.json|composer\.lock|gulpfile\.js|package-lock\.json|package\.json)$" - [F]
+</IfModule>
+
+# block access to vendor folder (independant of location)
+<IfModule mod_rewrite.c>
+    RewriteCond %{SCRIPT_FILENAME} -d [OR]
+    RewriteCond %{SCRIPT_FILENAME} -f
+    RewriteRule "(^|\/)vendor\/" - [F]
 </IfModule>
 
 # password on testing
