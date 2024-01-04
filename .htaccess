@@ -71,7 +71,7 @@ Satisfy any
 #</IfModule>
 
 # enable hsts (security addition)
-Header set Strict-Transport-Security max-age=31536000
+Header always set Strict-Transport-Security max-age=31536000
 Header set X-Frame-Options "sameorigin"
 Header set X-Content-Type-Options nosniff
 Header set X-XSS-Protection "1; mode=block"
