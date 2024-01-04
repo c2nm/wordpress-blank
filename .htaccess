@@ -76,7 +76,7 @@ Header set X-Frame-Options "sameorigin"
 Header set X-Content-Type-Options nosniff
 Header set X-XSS-Protection "1; mode=block"
 
-# enable cors (use a stricter version if needed)
+# cors: wildcard support
 <IfModule mod_headers.c>
     Header always set Access-Control-Allow-Origin "*"
     Header always set Access-Control-Allow-Methods "GET, POST, PUT, PATCH, DELETE, OPTIONS"

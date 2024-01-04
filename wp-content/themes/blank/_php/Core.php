@@ -65,8 +65,8 @@ class Core
         $this->disableUserSniffing();
         $this->blockSubscribersFromAdmin();
         $this->removeWordPressVersionInHead();
-        $this->disableWpCors();
-        $this->fixWpJsonOrigin();
+        //$this->disableWpCors();
+        //$this->fixWpJsonOrigin();
 
         /* performance */
         $this->addAsyncDeferToJsFiles();
@@ -969,7 +969,8 @@ $rand
         /*
         on /wp-json/ routes, if you set the "Origin" header in the request,
         that makes then wordpress respond with that same value in "Access-Control-Allow-Origin" in the response
-        burp suite sees this as a vulneraribility; fix that
+        burp suite sees this as a vulneraribility; fix that.
+        note: this only works if you *don't* set the cors headers in .htaccess
         */
         add_action('rest_api_init', function () {
             add_filter('http_origin', function ($origin) {
