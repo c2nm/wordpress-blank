@@ -82,6 +82,7 @@ class Core
         $this->advancedCustomFieldsRemoveEditorsOnAllPages();
         $this->advancedCustomFieldsReenableCustomMetaBox();
         $this->advancedCustomFieldsReduceWysiwygHeight();
+        $this->advancedCustomFieldsFixDraftPreview();
         $this->advancedCustomFieldsFlexibleContentPreview();
         $this->webPConverterAndCropThumbnailsFixPluginConflict();
         $this->autoClearCacheForWpFastestCache();
@@ -1006,6 +1007,22 @@ $rand
     private function advancedCustomFieldsReduceWysiwygHeight()
     {
         add_filter('acf/render_field/type=wysiwyg', [$this, 'preRenderWysiwygField'], 0, 1);
+    }
+
+    private function advancedCustomFieldsFixDraftPreview()
+    {
+        /* https://support.advancedcustomfields.com/forums/topic/preview-solution/page/3/#post-134967 */
+        add_filter(
+            'acf/pre_load_post_id',
+            function ($null, $post_id) {
+                if (is_preview()) {
+                    return get_the_ID();
+                }
+                return $null;
+            },
+            10,
+            2
+        );
     }
 
     private function advancedCustomFieldsFlexibleContentPreview()
