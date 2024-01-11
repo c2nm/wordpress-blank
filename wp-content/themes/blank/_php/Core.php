@@ -974,7 +974,7 @@ $rand
         */
         add_action('rest_api_init', function () {
             add_filter('http_origin', function ($origin) {
-                if (strpos($origin, get_bloginfo('url')) !== false) {
+                if (strpos(rtrim($origin,'/').'/', rtrim(get_bloginfo('url'),'/').'/') !== false) {
                     return $origin;
                 }
                 return get_bloginfo('url');
